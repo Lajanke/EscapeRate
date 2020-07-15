@@ -8,7 +8,7 @@
  * @format
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -29,89 +29,51 @@ import {
 declare const global: {HermesInternal: null | {}};
 
 const App = () => {
+  const [roomList, setRoomList] = useState([
+    {room: 'Pirate Ship', Escaped: 'No',},
+    {room: 'Egyptian Tomb', Escaped: 'Yes',},
+    {room: 'Viking', Escaped: 'Yes',},
+  ])
+
+
+
   return (
-    <>
-      <StatusBar barStyle="dark-content" />
-      <SafeAreaView>
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={styles.scrollView}>
-          <Header />
-          {global.HermesInternal == null ? null : (
-            <View style={styles.engine}>
-              <Text style={styles.footer}>Engine: Hermes</Text>
-            </View>
-          )}
-          <View style={styles.body}>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Step One</Text>
-              <Text style={styles.sectionDescription}>
-                Edit <Text style={styles.highlight}>App.tsx</Text> to change
-                this screen and then come back to see your edits.
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>See Your Changes: Here!!</Text>
-              <Text style={styles.sectionDescription}>
-                <ReloadInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Debug</Text>
-              <Text style={styles.sectionDescription}>
-                <DebugInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Learn More</Text>
-              <Text style={styles.sectionDescription}>
-                Read the docs to discover what to do next:
-              </Text>
-            </View>
-            <LearnMoreLinks />
+    <View style={styles.container}>
+      <View style={styles.header}>
+          <Text style={styles.headerText}>Escape Rate</Text>
+      </View>
+      {roomList.map((room) => {
+        return (
+          <View key={room.room}>
+            <Text style={styles.room}>{room.room}</Text>
           </View>
-        </ScrollView>
-      </SafeAreaView>
-    </>
+        )
+      })}
+    </View>
+  
+  
   );
 };
 
 const styles = StyleSheet.create({
-  scrollView: {
-    backgroundColor: Colors.lighter,
+  header: {
+    padding: 30,
+    backgroundColor: '#cc3d3d',
+    alignItems: 'center',
   },
-  engine: {
-    position: 'absolute',
-    right: 0,
+  headerText: {
+    fontSize: 40,
   },
-  body: {
-    backgroundColor: Colors.white,
+  container: {
+    backgroundColor: '#fff',
+    paddingTop: 40,
+    paddingHorizontal: 20,
   },
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
+  room: {
+    marginTop: 24,
+    padding: 30,
+    backgroundColor: '#cfcfcf',
     fontSize: 24,
-    fontWeight: '600',
-    color: Colors.black,
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-    color: Colors.dark,
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-  footer: {
-    color: Colors.dark,
-    fontSize: 12,
-    fontWeight: '600',
-    padding: 4,
-    paddingRight: 12,
-    textAlign: 'right',
   },
 });
 
