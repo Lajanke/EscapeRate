@@ -19,17 +19,18 @@ const AddRoomButton: React.FC<AddRoomButtonProps> = (props) => {
     }
     const [modalOpen, setModalState] = useState<boolean>(false)
 
-  return (
-    <>
-    <Modal visible={modalOpen}>
-      <Text>Form goes here</Text>
-      <Button title='Close' onPress={() => setModalState(false)}/>
-    </Modal>
-    <View style={styles.button}>
-      <Button title={"Add Room"} onPress={() => setModalState(true)} />
-    </View>
-    </>
-  );
+    return (
+      <>
+        <Modal visible={modalOpen}>
+          <Text>Form goes here</Text>
+          <Button title='Add New Room' onPress={addRoom}/>
+          <Button title='Close' onPress={() => setModalState(false)}/>
+        </Modal>
+        <View style={styles.button}>
+          <Button title={"Add Room"} onPress={() => setModalState(true)} />
+        </View>
+      </>
+    );
 };
 
 const styles = StyleSheet.create({

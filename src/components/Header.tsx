@@ -10,14 +10,14 @@ const Header: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
-    header: {
-      padding: 30,
-      backgroundColor: '#cc3d3d',
-      alignItems: 'center',
-    },
-    headerText: {
-      fontSize: 40,
-    },
-  });
+  header: {
+    padding: 30,
+    backgroundColor: '#cc3d3d',
+    alignItems: 'center',
+  },
+  headerText: {
+    fontSize: 40,
+  },
+});
 
 export default Header;

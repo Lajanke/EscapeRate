@@ -10,8 +10,11 @@ import {
 import AddRoomButton from './AddRoomButton';
 import Header from './Header';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { StackParamList } from '../App'
+import { StackParamList } from '../../App'
 import { TouchableHighlight } from 'react-native-gesture-handler';
+
+import { connect } from 'react-redux';
+import { changeRooms } from '../store/rooms/roomActions';
 
 declare const global: {HermesInternal: null | {}};
 
@@ -23,28 +26,24 @@ export interface Room {
 
 export interface HomeScreenProps {
     navigation: ProfileScreenNavigationProp;
+    count: any;
+    changeCount: any;
+    rooms: Room[];
+    changeRooms: any;
 }
 
-type ProfileScreenNavigationProp = StackNavigationProp<
-  StackParamList,
-  'Home'
->;
+type ProfileScreenNavigationProp = StackNavigationProp<StackParamList, 'Home'>;
 
 const HomeScreen: React.FC<HomeScreenProps> = (props) => {
-  const [roomList, setRoomList] = useState<Room[]>([
-    { id: 1, name: 'Pirate Ship', escaped: false },
-    { id: 2, name: 'Egyptian Tomb', escaped: true},
-    { id: 3, name: 'Viking', escaped: true },
-  ]);
 
   return (
     <SafeAreaView >
       <ScrollView>
       <View style={styles.container}>
         <Header/>
-          {roomList.map((room) => (
+          {props.rooms.map((room) => (
             <TouchableHighlight key={room.id} onPress={() =>
-              props.navigation.navigate('Room', { name: room.name })} >
+              props.navigation.navigate('Room', { id: room.id })} >
               <View >
                 <Text style={styles.room}>{room.name}{'\n'}
                 {room.escaped ? 'Escaped, hurrah!' : 'Locked in!'}
@@ -54,7 +53,7 @@ const HomeScreen: React.FC<HomeScreenProps> = (props) => {
             )
           )} 
       </View> 
-      <AddRoomButton roomList={roomList} setRoomList={setRoomList} />
+      <AddRoomButton roomList={props.rooms} setRoomList={props.changeRooms} />
       </ScrollView>
     </SafeAreaView>
   );
@@ -74,4 +73,12 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HomeScreen;
+const mapStateToProps = state => ({
+  rooms: state.rooms.rooms
+});
+
+const mapDispatchToProps = dispatch => ({
+  changeRooms: (rooms) => dispatch(changeRooms(rooms)) 
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen)

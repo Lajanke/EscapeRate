@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import HomeScreen from './components/HomeScreen';
-import RoomScreen from './components/RoomScreen';
+import HomeScreen from './src/components/HomeScreen';
+import RoomScreen from './src/components/RoomScreen';
 
 export type StackParamList = {
   Home: undefined;
-  Room: { name: string };
+  Room: { id: number };
 };
 
 const Stack = createStackNavigator<StackParamList>();
