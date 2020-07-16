@@ -1,9 +1,9 @@
-import React from 'react';
-import { Button, StyleSheet, View } from 'react-native';
+import React, { useState } from 'react';
+import { Button, StyleSheet, View, Modal, Text } from 'react-native';
 import { Room } from './HomeScreen';
 
 export interface AddRoomButtonProps {
-    setRoomList: React.Dispatch<React.SetStateAction<Room[]>>;
+    setRoomList: React.Dispatch<React.SetStateAction<Room[]>>; 
     roomList: Room[];
 }
 
@@ -17,10 +17,18 @@ const AddRoomButton: React.FC<AddRoomButtonProps> = (props) => {
         };
         props.setRoomList([...props.roomList, newRoom]);
     }
+    const [modalOpen, setModalState] = useState<boolean>(false)
+
   return (
+    <>
+    <Modal visible={modalOpen}>
+      <Text>Form goes here</Text>
+      <Button title='Close' onPress={() => setModalState(false)}/>
+    </Modal>
     <View style={styles.button}>
-      <Button title={"Add Room"} onPress={addRoom} />
+      <Button title={"Add Room"} onPress={() => setModalState(true)} />
     </View>
+    </>
   );
 };
 
