@@ -14,7 +14,9 @@ const Stack = createStackNavigator<StackParamList>();
 const App: React.FC = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator screenOptions={{
+        headerShown: false,
+      }}>
         <Stack.Screen
           name="Home"
           component={HomeScreen}

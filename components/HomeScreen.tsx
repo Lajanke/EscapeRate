@@ -11,6 +11,7 @@ import AddRoomButton from './AddRoomButton';
 import Header from './Header';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { StackParamList } from '../App'
+import { TouchableHighlight } from 'react-native-gesture-handler';
 
 declare const global: {HermesInternal: null | {}};
 
@@ -42,16 +43,14 @@ const HomeScreen: React.FC<HomeScreenProps> = (props) => {
       <View style={styles.container}>
         <Header/>
           {roomList.map((room) => (
-              <View key={room.id}>
-                <Text style={styles.room}>{room.name} : {room.id}</Text>
-                <Text>{room.escaped ? 'Escaped, hurrah!' : 'Locked in!'}</Text>
-                <Button
-                 title={`${room.name} room stats`}
-                 onPress={() =>
-                   props.navigation.navigate('Room', { name: room.name })
-                 }
-                />
+            <TouchableHighlight key={room.id} onPress={() =>
+              props.navigation.navigate('Room', { name: room.name })} >
+              <View >
+                <Text style={styles.room}>{room.name}{'\n'}
+                {room.escaped ? 'Escaped, hurrah!' : 'Locked in!'}
+                </Text>
               </View>
+              </TouchableHighlight>
             )
           )} 
       </View> 

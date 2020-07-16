@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from 'react-native';
+import { Button, StyleSheet, View } from 'react-native';
 import { Room } from './HomeScreen';
 
 export interface AddRoomButtonProps {
@@ -18,8 +18,18 @@ const AddRoomButton: React.FC<AddRoomButtonProps> = (props) => {
         props.setRoomList([...props.roomList, newRoom]);
     }
   return (
-    <Button title="Add Room" onPress={addRoom} />
+    <View style={styles.button}>
+      <Button title={"Add Room"} onPress={addRoom} />
+    </View>
   );
 };
+
+const styles = StyleSheet.create({
+  button: {
+    marginTop: 24,
+    marginBottom: 24,
+    paddingHorizontal: 20,
+  }
+});
 
 export default AddRoomButton;
