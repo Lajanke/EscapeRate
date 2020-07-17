@@ -12,11 +12,12 @@ const Header: React.FC = () => {
 const styles = StyleSheet.create({
   header: {
     padding: 30,
-    backgroundColor: '#cc3d3d',
+    backgroundColor: '#384963',
     alignItems: 'center',
   },
   headerText: {
     fontSize: 40,
+    color: '#fff',
   },
 });
 

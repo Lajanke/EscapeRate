@@ -22,6 +22,11 @@ export interface Room {
   id: number;
   name: string;
   escaped: boolean;
+  time: number;
+  groupSize: number;
+  image: string;
+  company: string;
+  companyURL: string;
 }
 
 export interface HomeScreenProps {
@@ -62,14 +67,14 @@ const HomeScreen: React.FC<HomeScreenProps> = (props) => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#fff',
-    paddingTop: 40,
-    paddingHorizontal: 20,
   },
   room: {
-    marginTop: 24,
     padding: 30,
-    backgroundColor: '#cfcfcf',
+    backgroundColor: '#fff',
     fontSize: 24,
+    borderStyle: 'solid',
+    borderBottomWidth: 1,
+    borderBottomColor: '#c7c7c7',
   },
 });
 

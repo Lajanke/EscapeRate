@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text } from 'react-native';
+import { Text, View, Image, StyleSheet } from 'react-native';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { StackParamList } from '../../App';
@@ -18,8 +18,48 @@ type RoomScreenRouteProp = RouteProp<StackParamList, 'Room'>;
 
 const RoomScreen: React.FC<RoomScreenProps> = (props) => {
   const room = props.rooms.find(r => r.id === props.route.params.id)
-  return <Text>This is the {room?.name} room!</Text>;
+  return  <View style={styles.roomContainer}>
+            <Text style={styles.roomText}>{room?.company}{'\n'}{room?.name}</Text>
+            <Image source={{uri: room?.image}} style={{height: 200, resizeMode: 'contain'}}/>
+            <View style={styles.statList}>
+              <Text style={room?.escaped ? styles.statEsc : styles.statTrap}>{room?.escaped ? 'Smashed It!' : 'Locked Up!'}</Text>
+              <Text style={styles.stat}>Time: {room?.time} minutes</Text>
+              <Text style={styles.stat}>Escapees: {room?.groupSize}</Text>
+            </View>
+          </View>;
 };
+
+const styles = StyleSheet.create({
+  roomContainer: {
+    backgroundColor: '#fff',
+  },
+  roomText: {
+    padding: 20,
+    marginBottom: 24,
+    backgroundColor: '#384963',
+    fontSize: 24,
+    textAlign: 'center',
+    color: '#fff'
+  },
+  statList: {
+    paddingTop: 24,
+  },
+  stat: {
+    fontSize: 20,
+    textAlign: 'center',
+    paddingTop: 24,
+  },
+  statEsc: {
+    fontSize: 30,
+    textAlign: 'center',
+    backgroundColor: '#4ba358',
+  },
+  statTrap: {
+    fontSize: 30,
+    textAlign: 'center',
+    backgroundColor: 'red',
+  }
+});
 
 const mapStateToProps = state => ({
   rooms: state.rooms.rooms
