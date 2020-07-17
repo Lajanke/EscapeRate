@@ -23,7 +23,7 @@ export interface Room {
   name: string;
   escaped: boolean;
   time: number;
-  groupSize: number;
+  groupSize: any;
   image: string;
   company: string;
   companyURL: string;

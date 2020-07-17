@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Button, StyleSheet, View, Modal, Text } from 'react-native';
 import { Room } from './HomeScreen';
+import AddRoomForm from './AddRoomForm';
 
 export interface AddRoomButtonProps {
     setRoomList: React.Dispatch<React.SetStateAction<Room[]>>; 
@@ -13,7 +14,12 @@ const AddRoomButton: React.FC<AddRoomButtonProps> = (props) => {
         const newRoom: Room = {
             id: maxId + 1,
             name: 'Room name',
-            escaped: false
+            escaped: false,
+            groupSize: 2,
+            time: 47,
+            company: 'Scape',
+            companyURL: 'https://lajanke.github.io/Portfolio/',
+            image: 'https://lajanke.github.io/Portfolio/images/avatarMe.png',
         };
         props.setRoomList([...props.roomList, newRoom]);
     }
@@ -22,7 +28,7 @@ const AddRoomButton: React.FC<AddRoomButtonProps> = (props) => {
     return (
       <>
         <Modal visible={modalOpen}>
-          <Text>Form goes here</Text>
+          <AddRoomForm />
           <Button title='Add New Room' onPress={addRoom}/>
           <Button title='Close' onPress={() => setModalState(false)}/>
         </Modal>
