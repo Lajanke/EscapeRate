@@ -23,7 +23,7 @@ export interface Room {
   name: string;
   escaped: boolean;
   time: number;
-  groupSize: any;
+  groupSize: number;
   image: string;
   company: string;
   companyURL: string;
@@ -31,8 +31,6 @@ export interface Room {
 
 export interface HomeScreenProps {
     navigation: ProfileScreenNavigationProp;
-    count: any;
-    changeCount: any;
     rooms: Room[];
     changeRooms: any;
 }
@@ -58,7 +56,7 @@ const HomeScreen: React.FC<HomeScreenProps> = (props) => {
             )
           )} 
       </View> 
-      <AddRoomButton roomList={props.rooms} setRoomList={props.changeRooms} />
+      <AddRoomButton roomList={props.rooms} changeRooms={props.changeRooms} setRoomList={props.changeRooms} rooms={props.rooms}/>
       </ScrollView>
     </SafeAreaView>
   );

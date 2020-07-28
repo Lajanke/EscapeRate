@@ -9,6 +9,7 @@ const initialState = {
 };
 
 const roomReducer = (state = initialState, action) => {
+  console.log(action)
   switch(action.type) {
     case ROOMS_CHANGE:
       return {
