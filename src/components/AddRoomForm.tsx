@@ -1,7 +1,8 @@
 import React from 'react';
-import { StyleSheet, Button, TextInput, View, Text,} from 'react-native';
-import { Formik } from 'formik';
-import { useLinkProps } from '@react-navigation/native';
+import { StyleSheet, Button, TextInput, View } from 'react-native';
+import { CheckBox } from 'react-native-elements';
+import { Formik, Field } from 'formik';
+import { useLinkProps, PrivateValueStore } from '@react-navigation/native';
 import { Room } from './HomeScreen';
 
 export interface AddRoomFormProps {
@@ -15,12 +16,12 @@ const AddRoomForm: React.FC<AddRoomFormProps> = (props) => {
         const newRoom: Room = {
             id: maxId + 1,
             name: values.name,
-            escaped: false,
+            escaped: values.escaped,
             groupSize: values.groupSize,
-            time: 47,
-            company: 'Scape',
-            companyURL: 'https://lajanke.github.io/Portfolio/',
-            image: 'https://lajanke.github.io/Portfolio/images/avatarMe.png',
+            time: values.time,
+            company: values.company,
+            companyURL: values.companyURL,
+            image: values.image,
         };
         props.setRoomList([...props.roomList, newRoom]);
     }
@@ -30,7 +31,7 @@ const AddRoomForm: React.FC<AddRoomFormProps> = (props) => {
             initialValues={{
                 name: '',
                 escaped: false,
-                time: 54,
+                time: '',
                 groupSize: '',
                 image: '',
                 company: '',
@@ -38,7 +39,6 @@ const AddRoomForm: React.FC<AddRoomFormProps> = (props) => {
             }}
             onSubmit={(values) => {
                 addRoom(values)
-               // console.log(values)
             }}
         >
             {(formikProps) => (
@@ -51,6 +51,35 @@ const AddRoomForm: React.FC<AddRoomFormProps> = (props) => {
                     onChangeText={formikProps.handleChange('groupSize')}
                     value={formikProps.values.groupSize}
                     keyboardType={"numeric"}
+                    />
+                    <TextInput placeholder='Time' 
+                    onChangeText={formikProps.handleChange('time')}
+                    value={formikProps.values.time}
+                    keyboardType={"numeric"}
+                    />
+                    <CheckBox
+                        title='Escaped?'
+                        checked={formikProps.values.escaped}
+                        iconType='material-community'
+                        checkedIcon='lock-open-variant-outline'
+                        uncheckedIcon='lock-outline'
+                        onPress={() => {
+                            
+                            console.log('pressed', formikProps.values)
+                            formikProps.setFieldValue('escaped', !formikProps.values.escaped)}
+                        }
+                    />
+                    <TextInput placeholder='Image' 
+                    onChangeText={formikProps.handleChange('image')}
+                    value={formikProps.values.image}
+                    />
+                    <TextInput placeholder='Company' 
+                    onChangeText={formikProps.handleChange('company')}
+                    value={formikProps.values.company}
+                    />
+                    <TextInput placeholder='Company Website' 
+                    onChangeText={formikProps.handleChange('companyURL')}
+                    value={formikProps.values.companyURL}
                     />
                     <Button title='submit' onPress={formikProps.handleSubmit} />
                 </View>
