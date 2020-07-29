@@ -24,7 +24,7 @@ const AddRoomForm: React.FC<AddRoomFormProps> = (props) => {
             companyURL: values.companyURL,
             image: values.image,
         };
-        props.setRoomList([...props.roomList, newRoom]);
+        props.setRoomList([newRoom, ...props.roomList]);
         props.setModalState(false)
     }
 
@@ -66,8 +66,6 @@ const AddRoomForm: React.FC<AddRoomFormProps> = (props) => {
                         checkedIcon='lock-open-variant-outline'
                         uncheckedIcon='lock-outline'
                         onPress={() => {
-                            
-                            console.log('pressed', formikProps.values)
                             formikProps.setFieldValue('escaped', !formikProps.values.escaped)}
                         }
                     />
