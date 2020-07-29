@@ -14,7 +14,7 @@ import { StackParamList } from '../../App'
 import { TouchableHighlight } from 'react-native-gesture-handler';
 
 import { connect } from 'react-redux';
-import { changeRooms } from '../store/rooms/roomActions';
+import { changeRooms, roomsReset } from '../store/rooms/roomActions';
 
 declare const global: {HermesInternal: null | {}};
 
@@ -33,6 +33,7 @@ export interface HomeScreenProps {
     navigation: ProfileScreenNavigationProp;
     rooms: Room[];
     changeRooms: any;
+    roomsReset: any;
 }
 
 type ProfileScreenNavigationProp = StackNavigationProp<StackParamList, 'Home'>;
@@ -56,7 +57,8 @@ const HomeScreen: React.FC<HomeScreenProps> = (props) => {
             )
           )} 
       </View> 
-      <AddRoomButton roomList={props.rooms} changeRooms={props.changeRooms} setRoomList={props.changeRooms} rooms={props.rooms}/>
+      <AddRoomButton roomList={props.rooms} setRoomList={props.changeRooms} rooms={props.rooms}/>
+      <Button title='store reset' onPress={props.roomsReset}/>
       </ScrollView>
     </SafeAreaView>
   );
@@ -81,7 +83,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  changeRooms: (rooms) => dispatch(changeRooms(rooms)) 
+  changeRooms: (rooms) => dispatch(changeRooms(rooms)),
+  roomsReset: () => dispatch(roomsReset()) 
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen)

@@ -1,4 +1,4 @@
-import { ROOMS_CHANGE } from './roomConstant';
+import { ROOMS_CHANGE, ROOMS_RESET } from './roomConstant';
 
 const initialState = {
     rooms: [
@@ -9,15 +9,22 @@ const initialState = {
 };
 
 const roomReducer = (state = initialState, action) => {
-  console.log(action)
+ 
   switch(action.type) {
+
     case ROOMS_CHANGE:
       return {
       ...state,
       rooms:action.payload
     };
+
+    case ROOMS_RESET:
+      console.log('in reset')
+      return initialState;
+
     default:
       return state;
   }
 }
+
 export default roomReducer;
