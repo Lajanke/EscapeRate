@@ -8,6 +8,7 @@ import { Room } from './HomeScreen';
 export interface AddRoomFormProps {
     setRoomList: React.Dispatch<React.SetStateAction<Room[]>>; 
     roomList: Room[];
+    setModalState: any;
 }
 
 const AddRoomForm: React.FC<AddRoomFormProps> = (props) => {
@@ -24,6 +25,7 @@ const AddRoomForm: React.FC<AddRoomFormProps> = (props) => {
             image: values.image,
         };
         props.setRoomList([...props.roomList, newRoom]);
+        props.setModalState(false)
     }
 
     return <View>
