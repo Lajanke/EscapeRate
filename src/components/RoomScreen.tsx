@@ -1,12 +1,14 @@
 import React from 'react';
-import { Text, View, Image, StyleSheet } from 'react-native';
+import { Text, View, Image, StyleSheet, Button } from 'react-native';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { StackParamList } from '../../App';
 import { connect } from 'react-redux';
 import { Room } from './HomeScreen';
+import { changeRooms } from '../store/rooms/roomActions';
 
 export interface RoomScreenProps {
+  setRoomList: React.Dispatch<React.SetStateAction<Room[]>>; 
   navigation: RoomScreenNavigationProp;
   route: RoomScreenRouteProp;
   rooms: Room[];
@@ -18,6 +20,12 @@ type RoomScreenRouteProp = RouteProp<StackParamList, 'Room'>;
 
 const RoomScreen: React.FC<RoomScreenProps> = (props) => {
   const room = props.rooms.find(r => r.id === props.route.params.id)
+
+  const deleteRoom = (id) => {
+    //console.log('delete pressed', id)
+    props.setRoomList(props.rooms.filter(room => room.id !== id));
+  }
+
   return  <View style={styles.roomContainer}>
             <Text style={styles.roomText}>{room?.company}{'\n'}{room?.name}</Text>
             <Image source={{uri: room?.image}} style={{height: 200, resizeMode: 'contain'}}/>
@@ -26,6 +34,7 @@ const RoomScreen: React.FC<RoomScreenProps> = (props) => {
               <Text style={styles.stat}>Time: {room?.time} minutes</Text>
               <Text style={styles.stat}>Escapees: {room?.groupSize}</Text>
             </View>
+            <Button title='Delete' onPress={() => deleteRoom(room?.id)} />
           </View>;
 };
 
@@ -64,5 +73,9 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => ({
   rooms: state.rooms.rooms
 });
+
+const mapDispatchToProps = dispatch => ({
+  setRoomList: (rooms) => dispatch(changeRooms(rooms)) 
+});
   
-export default connect(mapStateToProps)(RoomScreen)
+export default connect(mapStateToProps, mapDispatchToProps)(RoomScreen)

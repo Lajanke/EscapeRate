@@ -8,7 +8,6 @@ export interface AddRoomButtonProps {
     setRoomList: React.Dispatch<React.SetStateAction<Room[]>>; 
     roomList: Room[];
     rooms: Room[];
-    changeRooms: any;
 }
 
 const AddRoomButton: React.FC<AddRoomButtonProps> = (props) => {
@@ -18,7 +17,7 @@ const AddRoomButton: React.FC<AddRoomButtonProps> = (props) => {
     return (
       <>
         <Modal visible={modalOpen}>
-          <AddRoomForm roomList={props.rooms} setRoomList={props.changeRooms} setModalState={setModalState}/>
+          <AddRoomForm roomList={props.rooms} setRoomList={props.setRoomList} setModalState={setModalState}/>
           <Button title='Close' onPress={() => setModalState(false)}/>
         </Modal>
         <View style={styles.button}>
