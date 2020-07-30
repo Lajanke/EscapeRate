@@ -49,9 +49,11 @@ const HomeScreen: React.FC<HomeScreenProps> = (props) => {
       <View style={styles.container}>
         <Header/>
         <View style={styles.statsBar}>
-          <Text style={styles.statsText}>{percent}<Icon name='percent-outline' size={16}/></Text>
           <Text style={styles.statsText}>{props.rooms.length} Escape Attempts</Text>
-          <Text style={styles.statsText}><Icon name='timer-outline' size={16} /> {totalTime}</Text>
+          <View style={styles.percent}>
+            <Text style={styles.statsText}>{percent}<Icon name='percent-outline' size={16}/></Text>
+          </View>
+          <Text style={styles.statsText}><Icon name='timer-outline' size={16} /> {totalTime} minutes</Text>
         </View>
           {props.rooms.map((room) => (
             <TouchableHighlight key={room.id} onPress={() =>
@@ -104,9 +106,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-    statsText: {
-      fontSize: 16,
-    }
+  statsText: {
+    fontSize: 16,
+  },
+  percent: {
+    padding: 1,
+    paddingRight: 5,
+    paddingLeft: 5,
+    borderRadius: 3,
+    backgroundColor: '#a1adbf'
+  },
 });
 
 const mapStateToProps = state => ({
