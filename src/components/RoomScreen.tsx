@@ -7,6 +7,7 @@ import { StackParamList } from '../../App';
 import { connect } from 'react-redux';
 import { Room } from './HomeScreen';
 import { changeRooms } from '../store/rooms/roomActions';
+import {showMessage, hideMessage} from "react-native-flash-message";
 
 export interface RoomScreenProps {
   setRoomList: React.Dispatch<React.SetStateAction<Room[]>>; 
@@ -24,6 +25,11 @@ const RoomScreen: React.FC<RoomScreenProps> = (props) => {
 
   const deleteRoom = (id) => {
     props.setRoomList(props.rooms.filter(room => room.id !== id));
+    showMessage({
+      message: 'Deleted',
+      type: 'danger',
+    }) 
+    props.navigation.navigate('Home');  
   }
 
   return  <View style={styles.roomContainer}>

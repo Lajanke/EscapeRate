@@ -4,6 +4,7 @@ import { CheckBox } from 'react-native-elements';
 import { Formik, Field } from 'formik';
 import { useLinkProps, PrivateValueStore } from '@react-navigation/native';
 import { Room } from './HomeScreen';
+import {showMessage, hideMessage} from "react-native-flash-message";
 
 export interface AddRoomFormProps {
     setRoomList: React.Dispatch<React.SetStateAction<Room[]>>; 
@@ -25,7 +26,11 @@ const AddRoomForm: React.FC<AddRoomFormProps> = (props) => {
             image: values.image,
         };
         props.setRoomList([newRoom, ...props.roomList]);
-        props.setModalState(false)
+        props.setModalState(false);
+        showMessage({
+            message: 'New Room Added',
+            type: 'success',
+          }) 
     }
 
     return <View>

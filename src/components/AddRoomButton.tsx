@@ -16,7 +16,7 @@ const AddRoomButton: React.FC<AddRoomButtonProps> = (props) => {
 
     return (
       <>
-        <Modal visible={modalOpen}>
+        <Modal visible={modalOpen} animationType={'slide'}>
           <AddRoomForm roomList={props.rooms} setRoomList={props.setRoomList} setModalState={setModalState}/>
           <Button title='Close' onPress={() => setModalState(false)}/>
         </Modal>
