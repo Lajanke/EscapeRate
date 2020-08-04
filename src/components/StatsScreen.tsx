@@ -36,7 +36,7 @@ const StatsScreen: React.FC<StatsScreenProps> = (props) => {
     <SafeAreaView >
       <ScrollView>
       <View style={styles.container}>
-  <Text>StatsScreen {props.rooms.length}</Text>
+        <Text>StatsScreen {props.rooms.length}</Text>
       </View>
       </ScrollView>
     </SafeAreaView>
