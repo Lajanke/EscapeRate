@@ -4,7 +4,7 @@ import { CheckBox } from 'react-native-elements';
 import { Formik, Field } from 'formik';
 import { useLinkProps, PrivateValueStore } from '@react-navigation/native';
 import { Room } from './HomeScreen';
-import {showMessage, hideMessage} from "react-native-flash-message";
+import { showMessage } from "react-native-flash-message";
 
 export interface AddRoomFormProps {
     setRoomList: React.Dispatch<React.SetStateAction<Room[]>>; 
@@ -23,13 +23,14 @@ const AddRoomForm: React.FC<AddRoomFormProps> = (props) => {
             time: values.time,
             company: values.company,
             companyURL: values.companyURL,
-            image: values.image,
+            image: values.image ? values.image : 'https://thumbs.dreamstime.com/b/combination-lock-quest-escape-room-vintage-to-be-opened-solved-126538995.jpg',
         };
         props.setRoomList([newRoom, ...props.roomList]);
         props.setModalState(false);
         showMessage({
             message: 'New Room Added',
             type: 'success',
+            duration: 1000,
           }) 
     }
 
