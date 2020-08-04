@@ -13,33 +13,22 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { StackParamList } from '../../App'
 import { TouchableHighlight } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import HomeScreen, { Room } from './HomeScreen';
 
 import { connect } from 'react-redux';
 import { changeRooms, roomsReset } from '../store/rooms/roomActions';
 
 declare const global: {HermesInternal: null | {}};
 
-export interface Room {
-  id: number;
-  name: string;
-  escaped: boolean;
-  time: number;
-  groupSize: number;
-  image: string;
-  company: string;
-  companyURL: string;
-}
-
-export interface HomeScreenProps {
+export interface StatsScreenProps {
     navigation: ProfileScreenNavigationProp;
     rooms: Room[];
     changeRooms: any;
-    roomsReset: any;
 }
 
-type ProfileScreenNavigationProp = StackNavigationProp<StackParamList, 'Home'>;
+type ProfileScreenNavigationProp = StackNavigationProp<StackParamList, 'Stats'>;
 
-const HomeScreen: React.FC<HomeScreenProps> = (props) => {
+const StatsScreen: React.FC<StatsScreenProps> = (props) => {
   const percent = Math.floor((props.rooms.filter(room => room.escaped === true).length / props.rooms.length) * 100);
   const totalTime = props.rooms.reduce((acc, val) => acc + Number(val.time), 0)
 
@@ -47,34 +36,7 @@ const HomeScreen: React.FC<HomeScreenProps> = (props) => {
     <SafeAreaView >
       <ScrollView>
       <View style={styles.container}>
-        <Header/>
-        <TouchableHighlight onPress={() => props.navigation.navigate('Stats')} >
-          <View style={styles.statsBar}>
-            <Text style={styles.statsText}>{props.rooms.length} Escape Attempts</Text>
-            <View style={styles.percent}>
-              <Text style={styles.statsText}>{percent}<Icon name='percent-outline' size={16}/></Text>
-            </View>
-            <Text style={styles.statsText}><Icon name='timer-outline' size={16} /> {totalTime} minutes</Text>
-          </View>
-        </TouchableHighlight>
-          {props.rooms.map((room) => (
-            <TouchableHighlight key={room.id} onPress={() =>
-              props.navigation.navigate('Room', { id: room.id })} >
-              <View style={styles.room}>
-                <Text style={styles.roomText}>
-                  {room.name} 
-                </Text>
-                <Text>
-                {room.escaped ? <Icon name='exit-run' color='green' size={24} /> : <Icon name='door-closed-lock' color='red' size={30} />}
-                </Text>
-              </View>
-              </TouchableHighlight>
-            )
-          )} 
-      </View> 
-      <AddRoomButton roomList={props.rooms} setRoomList={props.changeRooms} rooms={props.rooms}/>
-      <View style={styles.resetButton} >
-      <Button title='store reset' onPress={props.roomsReset} color='#bac8de'/>
+  <Text>StatsScreen {props.rooms.length}</Text>
       </View>
       </ScrollView>
     </SafeAreaView>
@@ -129,9 +91,9 @@ const mapStateToProps = state => ({
   rooms: state.rooms.rooms
 });
 
-const mapDispatchToProps = dispatch => ({
+/*const mapDispatchToProps = dispatch => ({
   changeRooms: (rooms) => dispatch(changeRooms(rooms)),
   roomsReset: () => dispatch(roomsReset()) 
-});
+});*/
 
-export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen)
+export default connect(mapStateToProps)(StatsScreen)
