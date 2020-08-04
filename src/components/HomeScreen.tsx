@@ -71,7 +71,9 @@ const HomeScreen: React.FC<HomeScreenProps> = (props) => {
           )} 
       </View> 
       <AddRoomButton roomList={props.rooms} setRoomList={props.changeRooms} rooms={props.rooms}/>
-      <Button title='store reset' onPress={props.roomsReset}/>
+      <View style={styles.resetButton} >
+      <Button title='store reset' onPress={props.roomsReset} color='#bac8de'/>
+      </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -116,6 +118,9 @@ const styles = StyleSheet.create({
     borderRadius: 3,
     backgroundColor: '#a1adbf'
   },
+  resetButton: {
+    marginHorizontal: 20,
+  }
 });
 
 const mapStateToProps = state => ({

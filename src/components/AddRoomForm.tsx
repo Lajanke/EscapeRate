@@ -1,10 +1,21 @@
 import React from 'react';
-import { StyleSheet, Button, TextInput, View } from 'react-native';
+import { StyleSheet, Button, TextInput, View, Text } from 'react-native';
 import { CheckBox } from 'react-native-elements';
 import { Formik, Field } from 'formik';
 import { useLinkProps, PrivateValueStore } from '@react-navigation/native';
 import { Room } from './HomeScreen';
 import { showMessage } from "react-native-flash-message";
+import * as yup from 'yup';
+
+const newRoomSchema = yup.object({
+    name: yup.string().required('Required'),
+    groupSize: yup.string().test('is number 1-10', 'Must be a number between 1 - 10', (val) => {
+        return parseInt(val) < 11 && parseInt(val) > 0;
+    }),
+    time: yup.string().test('is number 1-120', 'Must be a number between 1 - 120', (val) => {
+        return parseInt(val) < 121 && parseInt(val) > 0;
+    }),
+})
 
 export interface AddRoomFormProps {
     setRoomList: React.Dispatch<React.SetStateAction<Room[]>>; 
@@ -45,26 +56,40 @@ const AddRoomForm: React.FC<AddRoomFormProps> = (props) => {
                 company: '',
                 companyURL: '',
             }}
+            validationSchema={newRoomSchema}
+            validateOnChange={true}
             onSubmit={(values) => {
                 addRoom(values)
             }}
         >
             {(formikProps) => (
-                <View>
+                <View style={styles.formContainer}>
                     <TextInput placeholder='Room name' 
                     onChangeText={formikProps.handleChange('name')}
                     value={formikProps.values.name}
+                    style={styles.input}
                     />
+                    {formikProps.touched.name && formikProps.errors.name &&
+                        <Text style={{ fontSize: 10, color: 'red' }}>{formikProps.errors.name}</Text>
+                    }
                     <TextInput placeholder='Group Size' 
                     onChangeText={formikProps.handleChange('groupSize')}
                     value={formikProps.values.groupSize}
                     keyboardType={"numeric"}
+                    style={styles.input}
                     />
-                    <TextInput placeholder='Time' 
+                    {formikProps.touched.groupSize && formikProps.errors.groupSize &&
+                        <Text style={{ fontSize: 10, color: 'red' }}>{formikProps.errors.groupSize}</Text>
+                    }
+                    <TextInput placeholder='How long did it take (minutes)' 
                     onChangeText={formikProps.handleChange('time')}
                     value={formikProps.values.time}
                     keyboardType={"numeric"}
+                    style={styles.input}
                     />
+                    {formikProps.touched.time && formikProps.errors.time &&
+                        <Text style={{ fontSize: 10, color: 'red' }}>{formikProps.errors.time}</Text>
+                    }
                     <CheckBox
                         title='Escaped?'
                         checked={formikProps.values.escaped}
@@ -74,24 +99,49 @@ const AddRoomForm: React.FC<AddRoomFormProps> = (props) => {
                         onPress={() => {
                             formikProps.setFieldValue('escaped', !formikProps.values.escaped)}
                         }
+                        checkedColor='green'
+                        uncheckedColor='red'
+                        iconRight={true}
                     />
                     <TextInput placeholder='Image' 
                     onChangeText={formikProps.handleChange('image')}
                     value={formikProps.values.image}
+                    style={styles.input}
                     />
                     <TextInput placeholder='Company' 
                     onChangeText={formikProps.handleChange('company')}
                     value={formikProps.values.company}
+                    style={styles.input}
                     />
                     <TextInput placeholder='Company Website' 
                     onChangeText={formikProps.handleChange('companyURL')}
                     value={formikProps.values.companyURL}
+                    style={styles.input}
                     />
-                    <Button title='submit' onPress={formikProps.handleSubmit} />
+                    <View style={styles.submitButton}>
+                    <Button title='submit' onPress={formikProps.handleSubmit} color='#536e96' />
+                    </View>
                 </View>
             )}
         </Formik>
     </View>
 }
+
+const styles = StyleSheet.create({
+    formContainer: {
+        margin: 40,
+    },
+    input: {
+        paddingTop: 15,
+        paddingBottom: 5,
+        borderStyle: 'solid',
+        borderBottomWidth: 1,
+        borderBottomColor: '#c7c7c7',
+    },
+    submitButton: {
+        marginTop: 24,
+    },
+  });
+  
 
 export default AddRoomForm;

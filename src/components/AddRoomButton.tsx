@@ -18,10 +18,12 @@ const AddRoomButton: React.FC<AddRoomButtonProps> = (props) => {
       <>
         <Modal visible={modalOpen} animationType={'slide'}>
           <AddRoomForm roomList={props.rooms} setRoomList={props.setRoomList} setModalState={setModalState}/>
-          <Button title='Close' onPress={() => setModalState(false)}/>
+          <View style={styles.closeButton}>
+          <Button title='Close' onPress={() => setModalState(false)} color='orange' />
+          </View>
         </Modal>
         <View style={styles.button}>
-          <Button title={"Add Room"} onPress={() => setModalState(true)} />
+          <Button title={"Add Room"} onPress={() => setModalState(true)} color='#384963'/>
         </View>
       </>
     );
@@ -32,6 +34,10 @@ const styles = StyleSheet.create({
     marginTop: 24,
     marginBottom: 24,
     paddingHorizontal: 20,
+  }, 
+  closeButton: {
+    marginLeft: 40,
+    marginRight: 40,
   }
 });
 
