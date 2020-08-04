@@ -36,8 +36,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   }, 
   closeButton: {
-    marginLeft: 40,
-    marginRight: 40,
+    marginHorizontal: 40,
   }
 });
 

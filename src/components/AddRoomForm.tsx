@@ -1,18 +1,18 @@
 import React from 'react';
-import { StyleSheet, Button, TextInput, View, Text } from 'react-native';
+import { StyleSheet, Button, TextInput, View, Text, Image } from 'react-native';
 import { CheckBox } from 'react-native-elements';
 import { Formik, Field } from 'formik';
-import { useLinkProps, PrivateValueStore } from '@react-navigation/native';
 import { Room } from './HomeScreen';
 import { showMessage } from "react-native-flash-message";
 import * as yup from 'yup';
+import ImagePicker from 'react-native-image-picker';
 
 const newRoomSchema = yup.object({
     name: yup.string().required('Required'),
-    groupSize: yup.string().test('is number 1-10', 'Must be a number between 1 - 10', (val) => {
+    groupSize: yup.string().test('is number 1-10', 'Must be a number between 1 - 10', (val: string): boolean => {
         return parseInt(val) < 11 && parseInt(val) > 0;
     }),
-    time: yup.string().test('is number 1-120', 'Must be a number between 1 - 120', (val) => {
+    time: yup.string().test('is number 1-120', 'Must be a number between 1 - 120', (val: string): boolean => {
         return parseInt(val) < 121 && parseInt(val) > 0;
     }),
 })
@@ -103,11 +103,6 @@ const AddRoomForm: React.FC<AddRoomFormProps> = (props) => {
                         uncheckedColor='red'
                         iconRight={true}
                     />
-                    <TextInput placeholder='Image' 
-                    onChangeText={formikProps.handleChange('image')}
-                    value={formikProps.values.image}
-                    style={styles.input}
-                    />
                     <TextInput placeholder='Company' 
                     onChangeText={formikProps.handleChange('company')}
                     value={formikProps.values.company}
@@ -118,10 +113,28 @@ const AddRoomForm: React.FC<AddRoomFormProps> = (props) => {
                     value={formikProps.values.companyURL}
                     style={styles.input}
                     />
+                    <View style={styles.imageUploadButton}>
+                        <Button
+                            title='Upload Image'
+                            onPress={() => {
+                                const options = {
+                                    noData: true
+                                };
+                            ImagePicker.launchImageLibrary(options, (response) => {
+                                if (response.uri) {
+                                    formikProps.values.image = response.uri
+
+                                }
+                            });
+                            }}
+                        >
+                    </Button>
                     <View style={styles.submitButton}>
                     <Button title='submit' onPress={formikProps.handleSubmit} color='#536e96' />
                     </View>
-                </View>
+                    
+                    </View>
+                </View>   
             )}
         </Formik>
     </View>
@@ -139,6 +152,9 @@ const styles = StyleSheet.create({
         borderBottomColor: '#c7c7c7',
     },
     submitButton: {
+        marginTop: 24,
+    },
+    imageUploadButton: {
         marginTop: 24,
     },
   });
