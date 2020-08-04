@@ -9,11 +9,12 @@ const initialState = {
 };
 
 const roomReducer = (state = initialState, action) => {
- 
+  console.log(action.payload)
   switch(action.type) {
-
+    
     case ROOMS_CHANGE:
       return {
+        
       ...state,
       rooms:action.payload
     };
