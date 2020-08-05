@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   StyleSheet,
   View,
@@ -7,13 +7,13 @@ import {
   SafeAreaView,
   Button,
 } from 'react-native';
-import AddRoomButton from './AddRoomButton';
-import Header from './Header';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { StackParamList } from '../../App'
 import { TouchableHighlight } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import HomeScreen, { Room } from './HomeScreen';
+import { Room } from './HomeScreen';
+import * as V from 'victory-native';
+import { Svg } from 'react-native-svg';
 
 import { connect } from 'react-redux';
 import { changeRooms, roomsReset } from '../store/rooms/roomActions';
@@ -31,14 +31,43 @@ type ProfileScreenNavigationProp = StackNavigationProp<StackParamList, 'Stats'>;
 const StatsScreen: React.FC<StatsScreenProps> = (props) => {
   const percent = Math.floor((props.rooms.filter(room => room.escaped === true).length / props.rooms.length) * 100);
   const totalTime = props.rooms.reduce((acc, val) => acc + Number(val.time), 0)
+  const escaped = props.rooms.filter(room => room.escaped).length
+  const trapped = props.rooms.filter(room => !room.escaped).length
+
+  const currentData = [ { y: escaped }, { y: trapped }];
+  const defaultData = [ { y: 0 }, { y: 1 }];
+  const graphicColor = ['#384963', '#b6c4d9'];
+
+  const [graphData, setGraphData] = useState(defaultData);
+
+  useEffect(() => {
+    setGraphData(currentData);
+  }, []);
 
   return (
-    <SafeAreaView >
-      <ScrollView>
-      <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
+      <View >
+        <Svg>
+      <V.VictoryPie data={graphData} 
+      width={400} height={300} 
+      colorScale={graphicColor} 
+      innerRadius={60} 
+      labelRadius={90}
+      labels={() => null}
+      animate={{ duration: 5000}}
+      />
+       <V.VictoryLabel
+          textAnchor="middle"
+          verticalAnchor='middle'
+          style={[{ fontSize: 40 }, {fontSize: 18}]}
+          x={200} y={165}
+          text={[`${percent}%`, 'Escaped']}
+        />
+        </Svg>
+    </View>
+      <View>
         <Text>StatsScreen {props.rooms.length}</Text>
       </View>
-      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -46,45 +75,8 @@ const StatsScreen: React.FC<StatsScreenProps> = (props) => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#fff',
-  },
-  room: {
-    padding: 24,
-    backgroundColor: '#fff',
-    borderStyle: 'solid',
-    borderBottomWidth: 1,
-    borderBottomColor: '#c7c7c7',
     flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
   },
-  roomText: {
-    fontSize: 24,
-  },
-  statsBar: {
-    padding: 16,
-    paddingLeft: 24,
-    paddingRight: 24,
-    backgroundColor: '#fff',
-    borderStyle: 'solid',
-    borderBottomWidth: 1,
-    borderBottomColor: '#c7c7c7',
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  statsText: {
-    fontSize: 16,
-  },
-  percent: {
-    padding: 1,
-    paddingRight: 5,
-    paddingLeft: 5,
-    borderRadius: 3,
-    backgroundColor: '#a1adbf'
-  },
-  resetButton: {
-    marginHorizontal: 20,
-  }
 });
 
 const mapStateToProps = state => ({
