@@ -45,10 +45,10 @@ const StatsScreen: React.FC<StatsScreenProps> = (props) => {
   }, []);
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View >
+    <SafeAreaView > 
+      <>
         <Svg>
-      <V.VictoryPie data={graphData} 
+      <V.VictoryPie data={graphData}
       width={400} height={300} 
       colorScale={graphicColor} 
       innerRadius={60} 
@@ -64,10 +64,11 @@ const StatsScreen: React.FC<StatsScreenProps> = (props) => {
           text={[`${percent}%`, 'Escaped']}
         />
         </Svg>
-    </View>
-      <View>
-        <Text>StatsScreen {props.rooms.length}</Text>
+      <View >
+        <Text style={{color: '#000'}}>StatsScreen {props.rooms.length}</Text>
+        <Text><Icon name='timer-outline' size={16} /> {totalTime} minutes</Text>
       </View>
+      </>
     </SafeAreaView>
   );
 };
@@ -75,7 +76,6 @@ const StatsScreen: React.FC<StatsScreenProps> = (props) => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#fff',
-    flex: 1,
   },
 });
 

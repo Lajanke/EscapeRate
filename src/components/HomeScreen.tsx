@@ -40,8 +40,6 @@ export interface HomeScreenProps {
 type ProfileScreenNavigationProp = StackNavigationProp<StackParamList, 'Home'>;
 
 const HomeScreen: React.FC<HomeScreenProps> = (props) => {
-  const percent = Math.floor((props.rooms.filter(room => room.escaped === true).length / props.rooms.length) * 100);
-  const totalTime = props.rooms.reduce((acc, val) => acc + Number(val.time), 0)
 
   return (
     <SafeAreaView >
@@ -50,11 +48,12 @@ const HomeScreen: React.FC<HomeScreenProps> = (props) => {
         <Header/>
         <TouchableHighlight onPress={() => props.navigation.navigate('Stats')} >
           <View style={styles.statsBar}>
-            <Text style={styles.statsText}>{props.rooms.length} Escape Attempts</Text>
-            <View style={styles.percent}>
-              <Text style={styles.statsText}>{percent}<Icon name='percent-outline' size={16}/></Text>
+            <View style={styles.statsIconText}>
+              <Text style={styles.totalNumber}>{props.rooms.length} </Text><Text style={styles.totalText}> Escape Attempts</Text>
             </View>
-            <Text style={styles.statsText}><Icon name='timer-outline' size={16} /> {totalTime} minutes</Text>
+            <View style={styles.statsIconText}>
+              <Text style={styles.statsText}>Full Stats </Text><Icon name='chevron-right' size={35} color='#384963' />
+            </View>
           </View>
         </TouchableHighlight>
           {props.rooms.map((room) => (
@@ -90,7 +89,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderStyle: 'solid',
     borderBottomWidth: 1,
-    borderBottomColor: '#c7c7c7',
+    borderBottomColor: '#bac8de',
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -100,8 +99,7 @@ const styles = StyleSheet.create({
   },
   statsBar: {
     padding: 16,
-    paddingLeft: 24,
-    paddingRight: 24,
+    paddingHorizontal: 24,
     backgroundColor: '#fff',
     borderStyle: 'solid',
     borderBottomWidth: 1,
@@ -110,8 +108,21 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
+  totalText: {
+    fontSize: 16,
+    paddingTop: 8,
+  },
   statsText: {
     fontSize: 16,
+    paddingTop: 8,
+  },
+  statsIconText: {
+    flexDirection: 'row',
+  },
+  totalNumber: {
+    fontWeight: 'bold',
+    fontSize: 24,
+    color: '#384963',
   },
   percent: {
     padding: 1,
