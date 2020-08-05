@@ -6,6 +6,7 @@ import {
   ScrollView,
   SafeAreaView,
   Button,
+  RecyclerViewBackedScrollViewComponent,
 } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { StackParamList } from '../../App'
@@ -36,19 +37,40 @@ const StatsScreen: React.FC<StatsScreenProps> = (props) => {
 
   const currentData = [ { y: escaped }, { y: trapped }];
   const defaultData = [ { y: 0 }, { y: 1 }];
+  const currentData2 = [ { y: 1 }, { y: 0 }];
   const graphicColor = ['#384963', '#b6c4d9'];
 
   const [graphData, setGraphData] = useState(defaultData);
+  const [graph2Data, setGraph2Data] = useState(defaultData);
 
   useEffect(() => {
     setGraphData(currentData);
+    setGraph2Data(currentData2)
   }, []);
 
   return (
     <SafeAreaView > 
-      <>
-        <Svg>
+      <Text style={styles.roomText}>Stats{'\n'}{props.rooms.length} Escape Attepmts</Text>
+  
+      <Svg height={300} width={400}>
       <V.VictoryPie data={graphData}
+      width={400} height={300} 
+      colorScale={graphicColor} 
+      innerRadius={60} 
+      labelRadius={90}
+      labels={() => null}
+      animate={{ duration: 3000}}
+      />
+       <V.VictoryLabel
+          textAnchor="middle"
+          verticalAnchor='middle'
+          style={[{ fontSize: 40 }, {fontSize: 18}]}
+          x={200} y={165}
+          text={[`${percent}%`, 'Escaped']}
+        />
+        </Svg>
+        <Svg height={300} width={400}>
+      <V.VictoryPie data={graph2Data}
       width={400} height={300} 
       colorScale={graphicColor} 
       innerRadius={60} 
@@ -59,16 +81,11 @@ const StatsScreen: React.FC<StatsScreenProps> = (props) => {
        <V.VictoryLabel
           textAnchor="middle"
           verticalAnchor='middle'
-          style={[{ fontSize: 40 }, {fontSize: 18}]}
+          style={[{ fontSize: 40 }, {fontSize: 16}, {fontSize: 16}]}
           x={200} y={165}
-          text={[`${percent}%`, 'Escaped']}
+          text={[`${totalTime}`, 'Minutes', 'Locked-up']}
         />
         </Svg>
-      <View >
-        <Text style={{color: '#000'}}>StatsScreen {props.rooms.length}</Text>
-        <Text><Icon name='timer-outline' size={16} /> {totalTime} minutes</Text>
-      </View>
-      </>
     </SafeAreaView>
   );
 };
@@ -77,15 +94,18 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#fff',
   },
+  roomText: {
+    padding: 20,
+    marginBottom: 24,
+    backgroundColor: '#384963',
+    fontSize: 24,
+    textAlign: 'center',
+    color: '#fff'
+  },
 });
 
 const mapStateToProps = state => ({
   rooms: state.rooms.rooms
 });
-
-/*const mapDispatchToProps = dispatch => ({
-  changeRooms: (rooms) => dispatch(changeRooms(rooms)),
-  roomsReset: () => dispatch(roomsReset()) 
-});*/
 
 export default connect(mapStateToProps)(StatsScreen)

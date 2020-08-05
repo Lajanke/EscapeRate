@@ -122,7 +122,7 @@ const AddRoomForm: React.FC<AddRoomFormProps> = (props) => {
                                 };
                             ImagePicker.launchImageLibrary(options, (response) => {
                                 if (response.path) {
-                                    formikProps.values.image = `file:///${response.path}`
+                                    formikProps.values.image = `file://${response.path}`
 
                                 }
                             });

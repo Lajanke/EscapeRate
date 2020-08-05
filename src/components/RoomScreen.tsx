@@ -22,7 +22,7 @@ type RoomScreenRouteProp = RouteProp<StackParamList, 'Room'>;
 
 const RoomScreen: React.FC<RoomScreenProps> = (props) => {
   const room = props.rooms.find(r => r.id === props.route.params.id)
-
+  console.log(room)
   const deleteRoom = (id) => {
     props.setRoomList(props.rooms.filter(room => room.id !== id));
     showMessage({
