@@ -121,8 +121,8 @@ const AddRoomForm: React.FC<AddRoomFormProps> = (props) => {
                                     noData: true
                                 };
                             ImagePicker.launchImageLibrary(options, (response) => {
-                                if (response.path) {
-                                    formikProps.values.image = `file://${response.path}`
+                                if (response.uri) {
+                                    formikProps.values.image = `${response.uri}`
 
                                 }
                             });
