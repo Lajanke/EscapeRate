@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Button, StyleSheet, View, Modal, Text, PermissionsAndroid } from 'react-native';
+import { Button, Image, StyleSheet, View, Modal, Text, PermissionsAndroid } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
-import Geolocation from 'react-native-geolocation-service'
+import Geolocation from 'react-native-geolocation-service';
+import axios from 'axios';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 export interface FindEscapeRoomProps {
 }
@@ -14,6 +16,8 @@ const FindEscapeRoom: React.FC<FindEscapeRoomProps> = (props) => {
       longitude: 0,
       coordinates: [],
     })
+    const [escapeRooms, setEscapeRooms] = useState<any>([
+])
 
     useEffect(() => {
       getLocation()
@@ -40,7 +44,27 @@ const FindEscapeRoom: React.FC<FindEscapeRoomProps> = (props) => {
           timeout: 20000,
           maximumAge: 0
         }
+        
       );
+      getEscapeRooms(location)
+    }
+
+    const getEscapeRooms = async (location) => {
+      const games = await axios.get(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${location.latitude},${location.longitude}&radius=10000&keyword=escape&key=AIzaSyBfKa69QF4Y6ghdqsTzsWcLoBTmPvYnBF8`)
+      .then((res) => {
+        console.log(res)
+        setEscapeRooms(res.data.results.map(company => {
+          return {name: company.name,
+                  coordinates: {
+                    latitude: company.geometry.location.lat,
+                    longitude: company.geometry.location.lng
+                  },
+          }
+        }))
+      })
+      .catch((err) => {
+        console.log(err)
+      })
     }
 
     const getLocation = async () => {
@@ -65,30 +89,38 @@ const FindEscapeRoom: React.FC<FindEscapeRoomProps> = (props) => {
       }
     };
 
+    console.log(escapeRooms)
+
     return (
-      
       <>
-        <Modal visible={modalOpen} animationType={'slide'}>
-          <Text>Map goes here</Text>
-          
-    <MapView
-        style={styles.map}
-        region={{
+      <Modal visible={modalOpen} animationType={'slide'}>   
+        <MapView
+        showsUserLocation
+        zoomControlEnabled={true}
+        zoomEnabled={true}
+          style={styles.map}
+          region={{
             latitude: location.latitude,
             longitude: location.longitude,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
-       }}>
-        <Marker
-        coordinate={{
-          latitude: location.latitude,
-            longitude: location.longitude,
-        }}></Marker>
-          </MapView>
-          <View style={styles.closeButton}>
-          <Button title='Close' onPress={() => setModalState(false)} color='orange' />
-          </View>
-        </Modal>
+            latitudeDelta: 0.03,
+            longitudeDelta: 0.03,
+        }}>
+          {escapeRooms.map((company, index) =>  
+            <Marker 
+              coordinate={{latitude: company.coordinates.latitude, longitude: company.coordinates.longitude}}
+              title={company.name}
+              key={index}
+              pinColor={'#384963'}>
+              <View>
+                <Icon name='key' size={40} color='#384963'></Icon> 
+              </View>
+            </Marker>
+          )}
+        </MapView>
+        <View style={styles.closeButton}>
+            <Button title='Close' onPress={() => setModalState(false)} color='orange' />
+        </View>
+      </Modal>
         <View style={styles.button}>
           <Button title={"Find Escape Room"} onPress={() => {setModalState(true)}} color='#384963'/>
         </View>
@@ -102,9 +134,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   }, 
   closeButton: {
-    marginHorizontal: 40,
+    marginLeft: 24,
+    width: 100,
+    marginTop: 24,
   },
-map: {
+  map: {
     ...StyleSheet.absoluteFillObject,
   },
 });
