@@ -50,7 +50,7 @@ const FindEscapeRoom: React.FC<FindEscapeRoomProps> = (props) => {
     }
 
     const getEscapeRooms = async (location) => {
-      const games = await axios.get(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${location.latitude},${location.longitude}&radius=10000&keyword=escape&key=AIzaSyBfKa69QF4Y6ghdqsTzsWcLoBTmPvYnBF8`)
+      const games = await axios.get(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${location.latitude},${location.longitude}&radius=20000&keyword=escape&&key=AIzaSyBfKa69QF4Y6ghdqsTzsWcLoBTmPvYnBF8`)
       .then((res) => {
         console.log(res)
         setEscapeRooms(res.data.results.map(company => {
@@ -88,8 +88,6 @@ const FindEscapeRoom: React.FC<FindEscapeRoomProps> = (props) => {
         console.log(err);
       }
     };
-
-    console.log(escapeRooms)
 
     return (
       <>
