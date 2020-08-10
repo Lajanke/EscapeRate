@@ -32,6 +32,10 @@ const RoomScreen: React.FC<RoomScreenProps> = (props) => {
     }) 
     props.navigation.navigate('Home');  
   }
+  
+  const minutes = room ? Number(room.timeLimit) - Number(room.time) : '';
+  
+  console.log(room?.timeLimit)
 
   return  <View style={styles.roomContainer}>
             <Text style={styles.roomText}>{room?.company}{'\n'}{room?.name}</Text>
@@ -39,6 +43,7 @@ const RoomScreen: React.FC<RoomScreenProps> = (props) => {
             <View style={styles.statList}>
               <Text style={room?.escaped ? styles.statEsc : styles.statTrap}>{room?.escaped ? 'Smashed It!' : 'Locked Up!'}</Text>
               <Text style={styles.stat}><Icon name='hourglass-outline' size={24} /> {room?.time} minutes</Text>
+              <Text style={styles.escapeText}>{minutes >= 0 ? `Escaped with ${minutes} minutes to spare`: `You needed just ${minutes ? Math.abs(minutes): ''} minutes to survive`}</Text>
               <Text style={styles.stat}><Icon name='people' size={24} /> {room?.groupSize}</Text>
             </View>
             <View style={styles.button}>
@@ -50,6 +55,7 @@ const RoomScreen: React.FC<RoomScreenProps> = (props) => {
 const styles = StyleSheet.create({
   roomContainer: {
     backgroundColor: '#fff',
+    flex: 1,
   },
   roomText: {
     padding: 20,
@@ -63,6 +69,11 @@ const styles = StyleSheet.create({
     paddingTop: 24,
   },
   stat: {
+    fontSize: 20,
+    textAlign: 'center',
+    paddingTop: 24,
+  },
+  escapeText: {
     fontSize: 20,
     textAlign: 'center',
     paddingTop: 24,
