@@ -15,6 +15,9 @@ const newRoomSchema = yup.object({
     time: yup.string().test('is number 1-120', 'Must be a number between 1 - 120', (val: string): boolean => {
         return parseInt(val) < 121 && parseInt(val) > 0;
     }),
+    timeLimit: yup.string().test('is number 1-120', 'Must be a number between 1 - 120', (val: string): boolean => {
+        return parseInt(val) < 121 && parseInt(val) > 0;
+    }),
 })
 
 export interface AddRoomFormProps {
@@ -32,8 +35,8 @@ const AddRoomForm: React.FC<AddRoomFormProps> = (props) => {
             escaped: values.escaped,
             groupSize: values.groupSize,
             time: values.time,
+            timeLimit: values.timeLimit,
             company: values.company,
-            companyURL: values.companyURL,
             image: values.image ? values.image : 'https://thumbs.dreamstime.com/b/combination-lock-quest-escape-room-vintage-to-be-opened-solved-126538995.jpg',
         };
         props.setRoomList([newRoom, ...props.roomList]);
@@ -50,11 +53,11 @@ const AddRoomForm: React.FC<AddRoomFormProps> = (props) => {
             initialValues={{
                 name: '',
                 escaped: false,
+                timeLimit: '',
                 time: '',
                 groupSize: '',
                 image: '',
                 company: '',
-                companyURL: '',
             }}
             validationSchema={newRoomSchema}
             validateOnChange={true}
@@ -81,6 +84,15 @@ const AddRoomForm: React.FC<AddRoomFormProps> = (props) => {
                     {formikProps.touched.groupSize && formikProps.errors.groupSize &&
                         <Text style={{ fontSize: 10, color: 'red' }}>{formikProps.errors.groupSize}</Text>
                     }
+                    <TextInput placeholder='Time Limit' 
+                    onChangeText={formikProps.handleChange('timeLimit')}
+                    value={formikProps.values.timeLimit}
+                    keyboardType={"numeric"}
+                    style={styles.input}
+                    />
+                    {formikProps.touched.timeLimit && formikProps.errors.timeLimit &&
+                        <Text style={{ fontSize: 10, color: 'red' }}>{formikProps.errors.timeLimit}</Text>
+                    }
                     <TextInput placeholder='How long did it take (minutes)' 
                     onChangeText={formikProps.handleChange('time')}
                     value={formikProps.values.time}
@@ -90,8 +102,9 @@ const AddRoomForm: React.FC<AddRoomFormProps> = (props) => {
                     {formikProps.touched.time && formikProps.errors.time &&
                         <Text style={{ fontSize: 10, color: 'red' }}>{formikProps.errors.time}</Text>
                     }
+                    <View style={styles.checkboxRow}>
+                        <Text style={styles.checkboxText}>Did You Escape?</Text>
                     <CheckBox
-                        title='Escaped?'
                         checked={formikProps.values.escaped}
                         iconType='material-community'
                         checkedIcon='lock-open-variant-outline'
@@ -103,14 +116,11 @@ const AddRoomForm: React.FC<AddRoomFormProps> = (props) => {
                         uncheckedColor='red'
                         iconRight={true}
                     />
+                    
+                    </View>
                     <TextInput placeholder='Company' 
                     onChangeText={formikProps.handleChange('company')}
                     value={formikProps.values.company}
-                    style={styles.input}
-                    />
-                    <TextInput placeholder='Company Website' 
-                    onChangeText={formikProps.handleChange('companyURL')}
-                    value={formikProps.values.companyURL}
                     style={styles.input}
                     />
                     <View style={styles.imageUploadButton}>
@@ -157,6 +167,14 @@ const styles = StyleSheet.create({
     imageUploadButton: {
         marginTop: 24,
     },
+    checkboxRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
+    checkboxText: {
+        marginTop: 20,
+        marginLeft: 3,
+    }
   });
   
 
