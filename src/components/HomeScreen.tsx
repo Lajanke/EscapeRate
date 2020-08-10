@@ -23,12 +23,12 @@ declare const global: {HermesInternal: null | {}};
 export interface Room {
   id: number;
   name: string;
+  timeLimit: number;
   escaped: boolean;
   time: number;
   groupSize: number;
   image: string;
   company: string;
-  companyURL: string;
 }
 
 export interface HomeScreenProps {
@@ -43,9 +43,9 @@ type ProfileScreenNavigationProp = StackNavigationProp<StackParamList, 'Home'>;
 const HomeScreen: React.FC<HomeScreenProps> = (props) => {
 
   return (
-    <SafeAreaView >
+    <SafeAreaView style={styles.container}>
       <ScrollView>
-      <View style={styles.container}>
+      <View >
         <Header/>
         <TouchableHighlight onPress={() => props.navigation.navigate('Stats')} >
           <View style={styles.statsBar}>
@@ -74,6 +74,7 @@ const HomeScreen: React.FC<HomeScreenProps> = (props) => {
       </View> 
       <AddRoomButton roomList={props.rooms} setRoomList={props.changeRooms} rooms={props.rooms}/>
       <FindEscapeRoom />
+      <Button title='reset' onPress={props.roomsReset}></Button>
       </ScrollView>
     </SafeAreaView>
   );
@@ -82,6 +83,7 @@ const HomeScreen: React.FC<HomeScreenProps> = (props) => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#fff',
+    flex: 1,
   },
   room: {
     padding: 24,
@@ -89,7 +91,6 @@ const styles = StyleSheet.create({
     borderStyle: 'solid',
     borderBottomWidth: 1,
     borderBottomColor: '#bac8de',
-    flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
@@ -103,7 +104,6 @@ const styles = StyleSheet.create({
     borderStyle: 'solid',
     borderBottomWidth: 1,
     borderBottomColor: '#c7c7c7',
-    flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
