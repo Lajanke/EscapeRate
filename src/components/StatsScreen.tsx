@@ -34,6 +34,8 @@ const StatsScreen: React.FC<StatsScreenProps> = (props) => {
   const totalTime = props.rooms.reduce((acc, val) => acc + Number(val.time), 0)
   const escaped = props.rooms.filter(room => room.escaped).length
   const trapped = props.rooms.filter(room => !room.escaped).length
+  const timeArray = props.rooms.map(room =>  Number(room.timeLimit) - Number(room.time))
+  const meanPercent = timeArray.reduce((acc, val) => Number(acc) + Number(val), 0) / props.rooms.length
 
   const currentData = [ { y: escaped }, { y: trapped }];
   const defaultData = [ { y: 0 }, { y: 1 }];
@@ -52,7 +54,7 @@ const StatsScreen: React.FC<StatsScreenProps> = (props) => {
     <SafeAreaView > 
       <Text style={styles.roomText}>Stats{'\n'}{props.rooms.length} Escape Attepmts</Text>
   
-      <Svg height={300} width={400}>
+      <Svg height={250} width={400}>
       <V.VictoryPie data={graphData}
       width={400} height={300} 
       colorScale={graphicColor} 
@@ -69,7 +71,7 @@ const StatsScreen: React.FC<StatsScreenProps> = (props) => {
           text={[`${percent}%`, 'Escaped']}
         />
         </Svg>
-        <Svg height={300} width={400}>
+        <Svg height={250} width={400}>
       <V.VictoryPie data={graph2Data}
       width={400} height={300} 
       colorScale={graphicColor} 
@@ -86,6 +88,7 @@ const StatsScreen: React.FC<StatsScreenProps> = (props) => {
           text={[`${totalTime}`, 'Minutes', 'Locked-up']}
         />
         </Svg>
+        <Text style={styles.meanText}>Average Time Left {Math.round(meanPercent)} minutes</Text>
     </SafeAreaView>
   );
 };
@@ -101,6 +104,11 @@ const styles = StyleSheet.create({
     fontSize: 24,
     textAlign: 'center',
     color: '#fff'
+  },
+  meanText: {
+    fontSize: 24,
+    textAlign: 'center',
+    paddingTop: 24,
   },
 });
 
