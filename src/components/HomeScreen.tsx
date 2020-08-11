@@ -23,6 +23,7 @@ declare const global: {HermesInternal: null | {}};
 export interface Room {
   id: number;
   name: string;
+  date: Date;
   timeLimit: number;
   escaped: boolean;
   time: number;
