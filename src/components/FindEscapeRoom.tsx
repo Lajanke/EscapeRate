@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Button, Image, StyleSheet, View, Modal, Text, PermissionsAndroid } from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
+import MapView, { Marker, Callout } from 'react-native-maps';
 import Geolocation from 'react-native-geolocation-service';
 import axios from 'axios';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -8,24 +8,39 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 export interface FindEscapeRoomProps {
 }
 
-const FindEscapeRoom: React.FC<FindEscapeRoomProps> = (props) => {
-    
+const usePrevious = (value) => {
+  const ref = useRef();
+  useEffect(() => {
+    ref.current = value;
+  });
+  return ref.current;
+}
+
+const FindEscapeRoom: React.FC<FindEscapeRoomProps> = (props) => { 
     const [modalOpen, setModalState] = useState<boolean>(false)
     const [location, setLocation] = useState<any>({
       latitude: 0,
       longitude: 0,
       coordinates: [],
-    })
-    const [escapeRooms, setEscapeRooms] = useState<any>([
-])
+    });
+    const prevLocation: any = usePrevious(location) || location;
+    const [escapeRooms, setEscapeRooms] = useState<any>([]);
 
     useEffect(() => {
-      getLocation()
+      getLocation();
     }, []);
 
+    useEffect(() => {
+      if (location.latitude !== prevLocation.latitude || location.longitude !== prevLocation.longitude) {
+        getEscapeRooms(location);
+      }   
+    }, [location]);
+
     const setCurrentLocation = () => {
+      console.log('fetching location');
       Geolocation.getCurrentPosition(
         position => {
+          console.log('finished getCUrrentPosition');
           setLocation({
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
@@ -43,18 +58,19 @@ const FindEscapeRoom: React.FC<FindEscapeRoomProps> = (props) => {
           enableHighAccuracy: true,
           timeout: 20000,
           maximumAge: 0
-        }
-        
+        }       
       );
-      getEscapeRooms(location)
     }
 
     const getEscapeRooms = async (location) => {
-      const games = await axios.get(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${location.latitude},${location.longitude}&radius=20000&keyword=escape&&key=AIzaSyBfKa69QF4Y6ghdqsTzsWcLoBTmPvYnBF8`)
+      console.log('doing location fetch');
+      await axios.get(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${location.latitude},${location.longitude}&radius=20000&keyword=escape&&key=AIzaSyBfKa69QF4Y6ghdqsTzsWcLoBTmPvYnBF8`)
       .then((res) => {
+        console.log('fetch completed')
         console.log(res)
         setEscapeRooms(res.data.results.map(company => {
           return {name: company.name,
+                  place_id: company.place_id,
                   coordinates: {
                     latitude: company.geometry.location.lat,
                     longitude: company.geometry.location.lng
@@ -69,6 +85,7 @@ const FindEscapeRoom: React.FC<FindEscapeRoomProps> = (props) => {
 
     const getLocation = async () => {
       try {
+        console.log('getting location permission')
         const granted = await PermissionsAndroid.request(
           PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
           {
@@ -82,12 +99,35 @@ const FindEscapeRoom: React.FC<FindEscapeRoomProps> = (props) => {
           }
         );
         if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          console.log('permission granted')
           setCurrentLocation()
         }
       } catch (err) {
         console.log(err);
       }
     };
+
+    const getCompanyDetails = (id) => {
+      console.log('getting company details', id);
+      setEscapeRooms(escapeRooms.map(company => {
+        if (company.place_id === id) {
+          console.log('matched id')
+          company.website = 'www.meatspin.com';
+        }
+        return company;
+      }))
+    }
+
+    const customCallout = (company) => {
+      if (company.place_id === 'ChIJP1hvbSqze0gRNl_nkKxwN38') {
+        console.log('customCallout', company);
+      }
+      return (<Text key={`${company.place_id}_callout`}>Website: {company.website || 'Unknown'}</Text>);
+    }
+    
+    console.log('rendering')
+
+    const markers: any[] = [];
 
     return (
       <>
@@ -103,17 +143,28 @@ const FindEscapeRoom: React.FC<FindEscapeRoomProps> = (props) => {
             latitudeDelta: 0.03,
             longitudeDelta: 0.03,
         }}>
-          {escapeRooms.map((company, index) =>  
-            <Marker 
+          {escapeRooms.map((company, index) => {
+            return (<Marker
+              ref={ref => {
+                markers[index] = ref;
+              }}
               coordinate={{latitude: company.coordinates.latitude, longitude: company.coordinates.longitude}}
               title={company.name}
               key={index}
-              pinColor={'#384963'}>
+              pinColor={'#384963'}
+              onPress={(e) => {
+                console.log('onPress', company.place_id)
+                getCompanyDetails(company.place_id)
+            
+              }}>
               <View>
                 <Icon name='key' size={40} color='#384963'></Icon> 
               </View>
+              <Callout tooltip>
+                {customCallout({...company})}                
+              </Callout>
             </Marker>
-          )}
+          );})}
         </MapView>
         <View style={styles.closeButton}>
             <Button title='Close' onPress={() => setModalState(false)} color='orange' />
