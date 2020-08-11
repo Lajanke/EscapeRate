@@ -1,11 +1,12 @@
-import React from 'react';
-import { StyleSheet, Button, TextInput, View, Text, Image } from 'react-native';
+import React, {useState} from 'react';
+import { StyleSheet, Button, TextInput, View, Text, Image, DatePickerAndroid, DatePickerIOSBase, Platform } from 'react-native';
 import { CheckBox } from 'react-native-elements';
 import { Formik, Field } from 'formik';
 import { Room } from './HomeScreen';
 import { showMessage } from "react-native-flash-message";
 import * as yup from 'yup';
 import ImagePicker from 'react-native-image-picker';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 const newRoomSchema = yup.object({
     name: yup.string().required('Required'),
@@ -27,11 +28,14 @@ export interface AddRoomFormProps {
 }
 
 const AddRoomForm: React.FC<AddRoomFormProps> = (props) => {
+    
     const addRoom = (values) => {
+        console.log(values.date)
         const maxId: number = props.roomList.reduce((max: number, room: Room) => room.id > max ? room.id : max, 0);
         const newRoom: Room = {
             id: maxId + 1,
             name: values.name,
+            date: values.date,
             escaped: values.escaped,
             groupSize: values.groupSize,
             time: values.time,
@@ -47,11 +51,13 @@ const AddRoomForm: React.FC<AddRoomFormProps> = (props) => {
             duration: 1000,
           }) 
     }
+    const [show, setShow] = useState(false);
 
     return <View>
         <Formik
             initialValues={{
                 name: '',
+                date: new Date(),
                 escaped: false,
                 timeLimit: '',
                 time: '',
@@ -75,6 +81,28 @@ const AddRoomForm: React.FC<AddRoomFormProps> = (props) => {
                     {formikProps.touched.name && formikProps.errors.name &&
                         <Text style={{ fontSize: 10, color: 'red' }}>{formikProps.errors.name}</Text>
                     }
+                <View>
+                    <Button onPress={() => {
+                        console.log('showing');
+                        setShow(true);
+                    }} title="Show date picker!" />
+                </View>
+                {show && (
+                    <View>
+                        <DateTimePicker
+                            testID="dateTimePicker"
+                            value={formikProps.values.date} 
+                            display="default"
+                            onChange={(event, selectedDate) => {
+                                console.log('hiding');
+                                setShow(false);
+
+                                // update formik last as this will cause a re-render
+                                formikProps.setFieldValue('date', selectedDate || formikProps.values.date);
+                            }}
+                        />
+                    </View>
+                )}
                     <TextInput placeholder='Group Size' 
                     onChangeText={formikProps.handleChange('groupSize')}
                     value={formikProps.values.groupSize}
