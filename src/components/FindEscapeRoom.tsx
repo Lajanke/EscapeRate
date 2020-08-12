@@ -4,6 +4,7 @@ import MapView, { Marker, Callout } from 'react-native-maps';
 import Geolocation from 'react-native-geolocation-service';
 import axios from 'axios';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import MarkerInfo from './MarkerInfo';
 
 export interface FindEscapeRoomProps {
 }
@@ -25,6 +26,8 @@ const FindEscapeRoom: React.FC<FindEscapeRoomProps> = (props) => {
     });
     const prevLocation: any = usePrevious(location) || location;
     const [escapeRooms, setEscapeRooms] = useState<any>([]);
+    const [info, setInfoOpen] = useState<Boolean>(false);
+    const [companyInfo, setMarkerInfo] = useState<any>({});
 
     useEffect(() => {
       getLocation();
@@ -101,13 +104,25 @@ const FindEscapeRoom: React.FC<FindEscapeRoomProps> = (props) => {
       }
     };
 
-    const getCompanyDetails = (id) => {
-      setEscapeRooms(escapeRooms.map(company => {
-        if (company.place_id === id) {
-          company.website = 'www.meatspin.com';
+    const getCompanyDetails = (company) => {
+      axios.get(`https://maps.googleapis.com/maps/api/place/details/json?place_id=${company.place_id}&key=AIzaSyBfKa69QF4Y6ghdqsTzsWcLoBTmPvYnBF8`)
+          .then((res) => {
+            updateCompany({...company, website: res.data.result.website})
+          })
+          .catch((err) => {
+            console.log(err)
+          })    
+    }
+
+    const updateCompany = (company) => {
+      setEscapeRooms(escapeRooms.map(comp => {
+        if (comp.place_id === company.place_id) {
+          return company;
         }
-        return company;
+        return comp;
       }))
+      setInfoOpen(true)
+      setMarkerInfo(company)
     }
 
     const customCallout = (company) => {
@@ -117,7 +132,7 @@ const FindEscapeRoom: React.FC<FindEscapeRoomProps> = (props) => {
       return (<Text key={`${company.place_id}_callout`}>Website: {company.website || 'Unknown'}</Text>);
     }
 
-    const markers: any[] = [];
+    console.log('RENDERING', escapeRooms)
 
     return (
       <>
@@ -126,37 +141,39 @@ const FindEscapeRoom: React.FC<FindEscapeRoomProps> = (props) => {
         showsUserLocation
         zoomControlEnabled={true}
         zoomEnabled={true}
-          style={styles.map}
-          region={{
-            latitude: location.latitude,
-            longitude: location.longitude,
-            latitudeDelta: 0.03,
-            longitudeDelta: 0.03,
-        }}>
+        style={styles.map}
+        region={{
+          latitude: location.latitude,
+          longitude: location.longitude,
+          latitudeDelta: 0.03,
+          longitudeDelta: 0.03,
+        }}
+        onPress={() => setInfoOpen(false)}
+        >
           {escapeRooms.map((company, index) => {
             return (<Marker
-              ref={ref => {
+              /*ref={ref => {
                 markers[index] = ref;
-              }}
+              }}*/
               coordinate={{latitude: company.coordinates.latitude, longitude: company.coordinates.longitude}}
               title={company.name}
-              key={index}
+              key={`${index}_${Date.now()}`}
               pinColor={'#384963'}
-              onPress={(e) => {
-                getCompanyDetails(company.place_id)   
+              onPress={() => {
+                getCompanyDetails(company) 
               }}>
               <View>
                 <Icon name='key' size={40} color='#384963'></Icon> 
               </View>
-              <Callout tooltip>
-                {customCallout({...company})}                
-              </Callout>
             </Marker>
           );})}
         </MapView>
         <View style={styles.closeButton}>
             <Button title='Close' onPress={() => setModalState(false)} color='orange' />
         </View>
+        {info && (
+          <MarkerInfo company={companyInfo}/>
+        )}
       </Modal>
         <View style={styles.button}>
           <Button title={"Find Escape Room"} onPress={() => {setModalState(true)}} color='#384963'/>
