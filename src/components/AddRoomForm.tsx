@@ -7,6 +7,8 @@ import { showMessage } from "react-native-flash-message";
 import * as yup from 'yup';
 import ImagePicker from 'react-native-image-picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import Icon from 'react-native-vector-icons/Ionicons';
+import { TouchableOpacity, TouchableHighlight } from 'react-native-gesture-handler';
 
 const newRoomSchema = yup.object({
     name: yup.string().required('Required'),
@@ -30,7 +32,6 @@ export interface AddRoomFormProps {
 const AddRoomForm: React.FC<AddRoomFormProps> = (props) => {
     
     const addRoom = (values) => {
-        console.log(values.date)
         const maxId: number = props.roomList.reduce((max: number, room: Room) => room.id > max ? room.id : max, 0);
         const newRoom: Room = {
             id: maxId + 1,
@@ -52,6 +53,7 @@ const AddRoomForm: React.FC<AddRoomFormProps> = (props) => {
           }) 
     }
     const [show, setShow] = useState(false);
+    const [uploadImage, setImage] = useState(false);
 
     return <View>
         <Formik
@@ -80,29 +82,8 @@ const AddRoomForm: React.FC<AddRoomFormProps> = (props) => {
                     />
                     {formikProps.touched.name && formikProps.errors.name &&
                         <Text style={{ fontSize: 10, color: 'red' }}>{formikProps.errors.name}</Text>
-                    }
-                <View>
-                    <Button onPress={() => {
-                        console.log('showing');
-                        setShow(true);
-                    }} title="Show date picker!" />
-                </View>
-                {show && (
-                    <View>
-                        <DateTimePicker
-                            testID="dateTimePicker"
-                            value={formikProps.values.date} 
-                            display="default"
-                            onChange={(event, selectedDate) => {
-                                console.log('hiding');
-                                setShow(false);
-
-                                // update formik last as this will cause a re-render
-                                formikProps.setFieldValue('date', selectedDate || formikProps.values.date);
-                            }}
-                        />
-                    </View>
-                )}
+                    }              
+                
                     <TextInput placeholder='Group Size' 
                     onChangeText={formikProps.handleChange('groupSize')}
                     value={formikProps.values.groupSize}
@@ -112,6 +93,7 @@ const AddRoomForm: React.FC<AddRoomFormProps> = (props) => {
                     {formikProps.touched.groupSize && formikProps.errors.groupSize &&
                         <Text style={{ fontSize: 10, color: 'red' }}>{formikProps.errors.groupSize}</Text>
                     }
+
                     <TextInput placeholder='Time Limit' 
                     onChangeText={formikProps.handleChange('timeLimit')}
                     value={formikProps.values.timeLimit}
@@ -121,6 +103,7 @@ const AddRoomForm: React.FC<AddRoomFormProps> = (props) => {
                     {formikProps.touched.timeLimit && formikProps.errors.timeLimit &&
                         <Text style={{ fontSize: 10, color: 'red' }}>{formikProps.errors.timeLimit}</Text>
                     }
+
                     <TextInput placeholder='How long did it take (minutes)' 
                     onChangeText={formikProps.handleChange('time')}
                     value={formikProps.values.time}
@@ -130,6 +113,7 @@ const AddRoomForm: React.FC<AddRoomFormProps> = (props) => {
                     {formikProps.touched.time && formikProps.errors.time &&
                         <Text style={{ fontSize: 10, color: 'red' }}>{formikProps.errors.time}</Text>
                     }
+
                     <View style={styles.checkboxRow}>
                         <Text style={styles.checkboxText}>Did You Escape?</Text>
                     <CheckBox
@@ -144,8 +128,31 @@ const AddRoomForm: React.FC<AddRoomFormProps> = (props) => {
                         uncheckedColor='red'
                         iconRight={true}
                     />
-                    
                     </View>
+
+                    <View style={styles.calendar}>
+                        <Text style={{marginTop: 7, marginLeft: 3}}>Date Visited: {new Date(formikProps.values.date).toDateString()}</Text>  
+                        <Icon name='calendar' size={24} style={{marginRight: 22}} onPress={() => {
+                        setShow(true);
+                        }}/>
+                    </View> 
+
+                    {show && (
+                        <View>
+                            <DateTimePicker
+                                testID="dateTimePicker"
+                                value={formikProps.values.date} 
+                                display="default"
+                                maximumDate={new Date()}
+                                onChange={(event, selectedDate) => {
+                                    setShow(false);
+                                    // update formik last as this will cause a re-render
+                                    formikProps.setFieldValue('date', selectedDate || formikProps.values.date);
+                                }}
+                            />
+                        </View>
+                    )}
+
                     <TextInput placeholder='Company' 
                     onChangeText={formikProps.handleChange('company')}
                     value={formikProps.values.company}
@@ -161,12 +168,15 @@ const AddRoomForm: React.FC<AddRoomFormProps> = (props) => {
                             ImagePicker.launchImageLibrary(options, (response) => {
                                 if (response.uri) {
                                     formikProps.values.image = `${response.uri}`
-
+                                    setImage(true)
                                 }
                             });
                             }}
                         >
                     </Button>
+                    {uploadImage && (
+                        <Image source={{uri: formikProps.values.image}} style={{height: 100, resizeMode: 'contain', marginTop: 24}}/>
+                    )}
                     <View style={styles.submitButton}>
                     <Button title='submit' onPress={formikProps.handleSubmit} color='#536e96' />
                     </View>
@@ -202,6 +212,10 @@ const styles = StyleSheet.create({
     checkboxText: {
         marginTop: 20,
         marginLeft: 3,
+    },
+    calendar: {
+       flexDirection: 'row',
+       justifyContent: 'space-between' 
     }
   });
   
