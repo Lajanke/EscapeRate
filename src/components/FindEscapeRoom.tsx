@@ -40,7 +40,6 @@ const FindEscapeRoom: React.FC<FindEscapeRoomProps> = (props) => {
       console.log('fetching location');
       Geolocation.getCurrentPosition(
         position => {
-          console.log('finished getCUrrentPosition');
           setLocation({
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
@@ -63,11 +62,8 @@ const FindEscapeRoom: React.FC<FindEscapeRoomProps> = (props) => {
     }
 
     const getEscapeRooms = async (location) => {
-      console.log('doing location fetch');
       await axios.get(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${location.latitude},${location.longitude}&radius=20000&keyword=escape&&key=AIzaSyBfKa69QF4Y6ghdqsTzsWcLoBTmPvYnBF8`)
       .then((res) => {
-        console.log('fetch completed')
-        console.log(res)
         setEscapeRooms(res.data.results.map(company => {
           return {name: company.name,
                   place_id: company.place_id,
@@ -85,7 +81,6 @@ const FindEscapeRoom: React.FC<FindEscapeRoomProps> = (props) => {
 
     const getLocation = async () => {
       try {
-        console.log('getting location permission')
         const granted = await PermissionsAndroid.request(
           PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
           {
@@ -99,7 +94,6 @@ const FindEscapeRoom: React.FC<FindEscapeRoomProps> = (props) => {
           }
         );
         if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-          console.log('permission granted')
           setCurrentLocation()
         }
       } catch (err) {
@@ -108,10 +102,8 @@ const FindEscapeRoom: React.FC<FindEscapeRoomProps> = (props) => {
     };
 
     const getCompanyDetails = (id) => {
-      console.log('getting company details', id);
       setEscapeRooms(escapeRooms.map(company => {
         if (company.place_id === id) {
-          console.log('matched id')
           company.website = 'www.meatspin.com';
         }
         return company;
@@ -124,8 +116,6 @@ const FindEscapeRoom: React.FC<FindEscapeRoomProps> = (props) => {
       }
       return (<Text key={`${company.place_id}_callout`}>Website: {company.website || 'Unknown'}</Text>);
     }
-    
-    console.log('rendering')
 
     const markers: any[] = [];
 
@@ -153,9 +143,7 @@ const FindEscapeRoom: React.FC<FindEscapeRoomProps> = (props) => {
               key={index}
               pinColor={'#384963'}
               onPress={(e) => {
-                console.log('onPress', company.place_id)
-                getCompanyDetails(company.place_id)
-            
+                getCompanyDetails(company.place_id)   
               }}>
               <View>
                 <Icon name='key' size={40} color='#384963'></Icon> 
