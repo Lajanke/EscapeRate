@@ -8,16 +8,23 @@ import * as V from 'victory-native';
 import { Svg } from 'react-native-svg';
 import { connect } from 'react-redux';
 
-
-declare const global: {HermesInternal: null | {}};
-
 export interface StackedBarChartProps {
     rooms: Room[];
     changeRooms: any;
 }
 
 const StackedBarChart: React.FC<StackedBarChartProps> = (props) => {
-  const years = [2016, 2017, 2018, 2019, 2020] //util function needed to get this data
+  const yearArray = props.rooms.map(room => new Date(room.date).getFullYear())
+  const maxYear = Math.max(...yearArray)
+  const minYear = Math.min(...yearArray)
+  const years: number[] = []
+
+  let i = minYear
+
+  while (i <= maxYear) {
+    years.push(i)
+    i++
+  }
 
   const dataByYear = years.map(y => {
       return {  year: y,
@@ -33,8 +40,9 @@ const StackedBarChart: React.FC<StackedBarChartProps> = (props) => {
             width={350}
          >
         <V.VictoryStack>
-            {dataByYear.map(year => {
-                return <V.VictoryBar 
+            {dataByYear.map((year, index) => {
+                return <V.VictoryBar
+                key={index} 
                 style={{data: {fill: 'red'}}}
                     animate={{
                     duration: 2000,
@@ -43,8 +51,9 @@ const StackedBarChart: React.FC<StackedBarChartProps> = (props) => {
                     data={[{x: `${year.year}`, y: year.data.filter(room => room.escaped === false).length},]}
                 />
             })}
-             {dataByYear.map(year => {
+             {dataByYear.map((year, index) => {
                 return <V.VictoryBar 
+                    key={index}
                     style={{data: {fill: 'green'}}}
                     animate={{
                     duration: 2000,
