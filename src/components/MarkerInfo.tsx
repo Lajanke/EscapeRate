@@ -10,12 +10,12 @@ const MarkerInfo: React.FC<MarkerInfoProps> = (props) => {
       
     <View style={styles.container}>
         <Text>{props.company.name}</Text>
-        <Text>{props.company.website}</Text>
+        <Text>{props.company.website ? props.company.website : 'No Website Info'}</Text>
     </View>
     
   );
 };
-
+ 
 const styles = StyleSheet.create({
     container: {
         backgroundColor: '#fff',

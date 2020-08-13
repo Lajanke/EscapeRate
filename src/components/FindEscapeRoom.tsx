@@ -28,16 +28,17 @@ const FindEscapeRoom: React.FC<FindEscapeRoomProps> = (props) => {
     const [escapeRooms, setEscapeRooms] = useState<any>([]);
     const [info, setInfoOpen] = useState<Boolean>(false);
     const [companyInfo, setMarkerInfo] = useState<any>({});
+    const [shouldFetchData, setShouldFetchData] = useState<Boolean>(false)
 
     useEffect(() => {
       getLocation();
     }, []);
 
     useEffect(() => {
-      if (location.latitude !== prevLocation.latitude || location.longitude !== prevLocation.longitude) {
+      if (shouldFetchData) {
         getEscapeRooms(location);
       }   
-    }, [location]);
+    }, [shouldFetchData]);
 
     const setCurrentLocation = () => {
       console.log('fetching location');
@@ -49,8 +50,9 @@ const FindEscapeRoom: React.FC<FindEscapeRoomProps> = (props) => {
             coordinates: location.coordinates.concat({
               latitude: position.coords.latitude,
               longitude: position.coords.longitude
-            })
+            }) 
           });
+          setShouldFetchData(true);
         },
         error => {
           console.log(error)
@@ -65,6 +67,7 @@ const FindEscapeRoom: React.FC<FindEscapeRoomProps> = (props) => {
     }
 
     const getEscapeRooms = async (location) => {
+      setShouldFetchData(false)
       await axios.get(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${location.latitude},${location.longitude}&radius=20000&keyword=escape&&key=AIzaSyBfKa69QF4Y6ghdqsTzsWcLoBTmPvYnBF8`)
       .then((res) => {
         setEscapeRooms(res.data.results.map(company => {
@@ -74,7 +77,7 @@ const FindEscapeRoom: React.FC<FindEscapeRoomProps> = (props) => {
                     latitude: company.geometry.location.lat,
                     longitude: company.geometry.location.lng
                   },
-          }
+            }
         }))
       })
       .catch((err) => {
@@ -83,6 +86,7 @@ const FindEscapeRoom: React.FC<FindEscapeRoomProps> = (props) => {
     }
 
     const getLocation = async () => {
+      console.log('in get location')
       try {
         const granted = await PermissionsAndroid.request(
           PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
@@ -107,6 +111,7 @@ const FindEscapeRoom: React.FC<FindEscapeRoomProps> = (props) => {
     const getCompanyDetails = (company) => {
       axios.get(`https://maps.googleapis.com/maps/api/place/details/json?place_id=${company.place_id}&key=AIzaSyBfKa69QF4Y6ghdqsTzsWcLoBTmPvYnBF8`)
           .then((res) => {
+            console.log(res)
             updateCompany({...company, website: res.data.result.website})
           })
           .catch((err) => {
@@ -125,19 +130,13 @@ const FindEscapeRoom: React.FC<FindEscapeRoomProps> = (props) => {
       setMarkerInfo(company)
     }
 
-    const customCallout = (company) => {
-      if (company.place_id === 'ChIJP1hvbSqze0gRNl_nkKxwN38') {
-        console.log('customCallout', company);
-      }
-      return (<Text key={`${company.place_id}_callout`}>Website: {company.website || 'Unknown'}</Text>);
-    }
-
     console.log('RENDERING', escapeRooms)
 
     return (
       <>
       <Modal visible={modalOpen} animationType={'slide'}>   
         <MapView
+        moveOnMarkerPress
         showsUserLocation
         zoomControlEnabled={true}
         zoomEnabled={true}
@@ -152,15 +151,20 @@ const FindEscapeRoom: React.FC<FindEscapeRoomProps> = (props) => {
         >
           {escapeRooms.map((company, index) => {
             return (<Marker
-              /*ref={ref => {
-                markers[index] = ref;
-              }}*/
               coordinate={{latitude: company.coordinates.latitude, longitude: company.coordinates.longitude}}
               title={company.name}
               key={`${index}_${Date.now()}`}
               pinColor={'#384963'}
               onPress={() => {
-                getCompanyDetails(company) 
+                getCompanyDetails(company)
+                setLocation({
+                  latitude: company.coordinates.latitude,
+                  longitude: company.coordinates.longitude,
+                  coordinates: location.coordinates.concat({
+                    latitude: company.coordinates.latitude,
+                    longitude: company.coordinates.longitude,
+                  }) 
+                })
               }}>
               <View>
                 <Icon name='key' size={40} color='#384963'></Icon> 
@@ -169,7 +173,7 @@ const FindEscapeRoom: React.FC<FindEscapeRoomProps> = (props) => {
           );})}
         </MapView>
         <View style={styles.closeButton}>
-            <Button title='Close' onPress={() => setModalState(false)} color='orange' />
+            <Button title='Close Map' onPress={() => setModalState(false)} color='orange' />
         </View>
         {info && (
           <MarkerInfo company={companyInfo}/>
