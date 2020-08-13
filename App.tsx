@@ -19,20 +19,33 @@ const App: React.FC = () => {
   return (
     <>
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{
-        headerShown: false,
-      }}>
+      <Stack.Navigator 
+        screenOptions={{
+          headerStyle: {
+            backgroundColor: '#384963',
+            height: 35,          
+          },
+          headerTitleStyle: {
+            color: '#fff',
+            alignSelf: 'flex-end',  
+          },
+          headerTintColor: '#fff'
+        }}
+      >
         <Stack.Screen
           name="Home"
           component={HomeScreen}
+          options={{headerShown: false}}
         />
         <Stack.Screen 
           name="Room" 
-          component={RoomScreen} 
+          component={RoomScreen}
+          options={{title: 'Escape Rate'}}
         />
         <Stack.Screen 
           name="Stats"
           component={StatsScreen}
+          options={{title: 'Escape Rate'}}
         />
       </Stack.Navigator>
     </NavigationContainer>
