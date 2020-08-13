@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   StyleSheet,
+  View
 } from 'react-native';
 import { Room } from './HomeScreen';
 import * as V from 'victory-native';
@@ -23,17 +24,15 @@ const StackedBarChart: React.FC<StackedBarChartProps> = (props) => {
                 data: props.rooms.filter(room => new Date(room.date).getFullYear() === y)}
   })
 
-  console.log(dataByYear)
-
   return (
-    <Svg height={275} width={400} style={{marginTop: 24, marginLeft: 10}}> 
+    <View style={styles.container}>
+    <Svg height={275} width={350} style={{marginTop: 24}}> 
          <V.VictoryChart
             domainPadding={{x: 24}}
             horizontal={true}
+            width={350}
          >
-        <V.VictoryStack
-        
-        >
+        <V.VictoryStack>
             {dataByYear.map(year => {
                 return <V.VictoryBar 
                 style={{data: {fill: 'red'}}}
@@ -54,15 +53,14 @@ const StackedBarChart: React.FC<StackedBarChartProps> = (props) => {
                     data={[{x: `${year.year}`, y: year.data.filter(room => room.escaped === true).length}]}
                 />
             })}
-        </V.VictoryStack>
-        
+        </V.VictoryStack>       
       </V.VictoryChart>
       <V.VictoryLabel 
         style={[{ fontSize: 16, color: '#384963',}]}
-        text={['Escape Rate by year']}
+        text={['Escape Rate', 'by year']}
         verticalAnchor='start'
       />
-        <V.VictoryLegend x={200} y={0}
+        <V.VictoryLegend x={150} y={0}
             orientation="horizontal"
             gutter={20}
             data={[
@@ -71,24 +69,13 @@ const StackedBarChart: React.FC<StackedBarChartProps> = (props) => {
             ]}
         />
     </Svg>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#fff',
-  },
-  headerText: {
-    padding: 20,
-    backgroundColor: '#384963',
-    fontSize: 24,
-    textAlign: 'center',
-    color: '#fff'
-  },
-  meanText: {
-    fontSize: 24,
-    textAlign: 'center',
-    paddingTop: 24,
+    alignSelf: 'center',
   },
 });
 

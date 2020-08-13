@@ -118,7 +118,11 @@ const styles = StyleSheet.create({
     paddingTop: 24,
   },
   pieCharts: {
-    flexDirection: 'row'
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    borderStyle: 'solid',
+    borderBottomWidth: 1,
+    borderBottomColor: '#c7c7c7'
   }
 });
 
