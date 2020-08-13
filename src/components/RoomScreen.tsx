@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, Image, StyleSheet, Button } from 'react-native';
+import { Text, View, Image, StyleSheet, Button, SafeAreaView } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons'
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -9,6 +9,7 @@ import { Room } from './HomeScreen';
 import { changeRooms } from '../store/rooms/roomActions';
 import { showMessage } from "react-native-flash-message";
 import RoomHeader from './RoomHeader';
+import { ScrollView } from 'react-native-gesture-handler';
 
 export interface RoomScreenProps {
   setRoomList: React.Dispatch<React.SetStateAction<Room[]>>; 
@@ -35,19 +36,27 @@ const RoomScreen: React.FC<RoomScreenProps> = (props) => {
   
   const minutes = room ? Number(room.timeLimit) - Number(room.time) : '';
 
-  return  <View style={styles.roomContainer}>
-           <RoomHeader company={room?.company ? room?.company : ''} roomName={room?.name ? room?.name : ''} date={room?.date ? new Date(room?.date).toDateString() : 'Date unknown'}/>
-           <Text style={room?.escaped ? styles.statEsc : styles.statTrap}>{room?.escaped ? 'Smashed It!' : 'Locked Up!'}</Text>
-            <Image source={{uri: room?.image}} style={{height: 200, resizeMode: 'contain', marginTop: 24}}/>
-            <View >    
-              <Text style={styles.stat}><Icon name='hourglass-outline' size={24} /> {room?.time} minutes</Text>
-              <Text style={styles.escapeText}>{minutes >= 0 ? `Escaped with ${minutes} minutes to spare`: `You needed just ${minutes ? Math.abs(minutes): ''} minutes to survive`}</Text>
-              <Text style={styles.stat}><Icon name='people' size={24} /> {room?.groupSize}</Text>
-            </View>
-            <View style={styles.button}>
-              <Button title='Delete' onPress={() => deleteRoom(room?.id)} />
-            </View>
-          </View>;
+  return (
+    <SafeAreaView style={styles.roomContainer}>
+      <ScrollView>
+    <View >
+    <RoomHeader company={room?.company ? room?.company : ''} roomName={room?.name ? room?.name : ''} date={room?.date ? new Date(room?.date).toDateString() : 'Date unknown'}/>
+    <Text style={room?.escaped ? styles.statEsc : styles.statTrap}>{room?.escaped ? 'Smashed It!' : 'Locked Up!'}</Text>
+     <Image source={{uri: room?.image}} style={{height: 200, resizeMode: 'contain', marginTop: 24}}/>
+     <View >    
+       <Text style={styles.stat}><Icon name='hourglass-outline' size={24} /> {room?.time} minutes</Text>
+       <Text style={styles.escapeText}>{minutes >= 0 ? `Escaped with ${minutes} minutes to spare`: `You needed just ${minutes ? Math.abs(minutes): ''} minutes to survive`}</Text>
+       <Text style={styles.stat}><Icon name='people' size={24} /> {room?.groupSize}</Text>
+     </View>
+     <View style={styles.button}>
+       <Button title='Delete' onPress={() => deleteRoom(room?.id)} />
+     </View>
+   </View>
+   </ScrollView>
+   </SafeAreaView>
+  )  
+  
+     
 };
 
 const styles = StyleSheet.create({
