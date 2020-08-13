@@ -15,6 +15,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Room } from './HomeScreen';
 import * as V from 'victory-native';
 import { Svg } from 'react-native-svg';
+import StackedBarChart from './StackedBarChart';
 
 import { connect } from 'react-redux';
 import { changeRooms, roomsReset } from '../store/rooms/roomActions';
@@ -40,7 +41,8 @@ const StatsScreen: React.FC<StatsScreenProps> = (props) => {
   const currentData = [ { y: escaped }, { y: trapped }];
   const defaultData = [ { y: 0 }, { y: 1 }];
   const currentData2 = [ { y: 1 }, { y: 0 }];
-  const graphicColor = ['#384963', '#b6c4d9'];
+  const graphicColor = ['green', 'red'];
+  const graphicColor2 = ['#384963', '#b6c4d9'];
 
   const [graphData, setGraphData] = useState(defaultData);
   const [graph2Data, setGraph2Data] = useState(defaultData);
@@ -52,13 +54,14 @@ const StatsScreen: React.FC<StatsScreenProps> = (props) => {
 
   return (
     <SafeAreaView > 
-      <Text style={styles.roomText}>Stats{'\n'}{props.rooms.length} Escape Attepmts</Text>
-  
-      <Svg height={250} width={400}>
+      <ScrollView>
+      <Text style={styles.headerText}>Stats{'\n'}{props.rooms.length} Escape Attepmts</Text>
+    <View style={styles.pieCharts}>
+      <Svg height={200} width={200}>
       <V.VictoryPie data={graphData}
-      width={400} height={300} 
+      width={200} height={200} 
       colorScale={graphicColor} 
-      innerRadius={60} 
+      innerRadius={70} 
       labelRadius={90}
       labels={() => null}
       animate={{ duration: 3000}}
@@ -66,16 +69,16 @@ const StatsScreen: React.FC<StatsScreenProps> = (props) => {
        <V.VictoryLabel
           textAnchor="middle"
           verticalAnchor='middle'
-          style={[{ fontSize: 40 }, {fontSize: 18}]}
-          x={200} y={165}
+          style={[{ fontSize: 32 }, {fontSize: 14}]}
+          x={100} y={115}
           text={[`${percent}%`, 'Escaped']}
         />
         </Svg>
-        <Svg height={250} width={400}>
+        <Svg height={200} width={200}>
       <V.VictoryPie data={graph2Data}
-      width={400} height={300} 
-      colorScale={graphicColor} 
-      innerRadius={60} 
+      width={200} height={200} 
+      colorScale={graphicColor2} 
+      innerRadius={70} 
       labelRadius={90}
       labels={() => null}
       animate={{ duration: 5000}}
@@ -83,12 +86,17 @@ const StatsScreen: React.FC<StatsScreenProps> = (props) => {
        <V.VictoryLabel
           textAnchor="middle"
           verticalAnchor='middle'
-          style={[{ fontSize: 40 }, {fontSize: 16}, {fontSize: 16}]}
-          x={200} y={165}
+          style={[{ fontSize: 32 }, {fontSize: 14}, {fontSize: 14}]}
+          x={100} y={110}
           text={[`${totalTime}`, 'Minutes', 'Locked-up']}
         />
         </Svg>
-        <Text style={styles.meanText}>Average Time Left {Math.round(meanPercent)} minutes</Text>
+        </View>
+        <StackedBarChart />
+        
+        <Text style={styles.meanText}>Average Time Left: {Math.round(meanPercent)} minutes</Text>
+      
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -97,9 +105,8 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#fff',
   },
-  roomText: {
+  headerText: {
     padding: 20,
-    marginBottom: 24,
     backgroundColor: '#384963',
     fontSize: 24,
     textAlign: 'center',
@@ -110,6 +117,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     paddingTop: 24,
   },
+  pieCharts: {
+    flexDirection: 'row'
+  }
 });
 
 const mapStateToProps = state => ({
