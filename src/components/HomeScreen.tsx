@@ -66,7 +66,7 @@ const HomeScreen: React.FC<HomeScreenProps> = (props) => {
                   {room.name} 
                 </Text>
                 <Text>
-                {room.escaped ? <Icon name='exit-run' color='green' size={24} /> : <Icon name='door-closed-lock' color='red' size={30} />}
+                {room.escaped ? <Icon name='exit-run' color='#4ba358' size={24} /> : <Icon name='door-closed-lock' color='#e84848' size={30} />}
                 </Text>
               </View>
               </TouchableHighlight>
@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
   },
   room: {
     padding: 24,
-    backgroundColor: '#fff',
+    backgroundColor: '#edfcfc',
     borderStyle: 'solid',
     borderBottomWidth: 1,
     borderBottomColor: '#bac8de',

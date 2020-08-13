@@ -41,7 +41,7 @@ const RoomScreen: React.FC<RoomScreenProps> = (props) => {
       <ScrollView>
     <View >
     <RoomHeader company={room?.company ? room?.company : ''} roomName={room?.name ? room?.name : ''} date={room?.date ? new Date(room?.date).toDateString() : 'Date unknown'}/>
-    <Text style={room?.escaped ? styles.statEsc : styles.statTrap}>{room?.escaped ? 'Smashed It!' : 'Locked Up!'}</Text>
+    <Text style={room?.escaped ? styles.statEsc : styles.statTrap}>{room?.escaped ? 'Escaped!' : 'Locked Up!'}</Text>
      <Image source={{uri: room?.image}} style={{height: 200, resizeMode: 'contain', marginTop: 24}}/>
      <View >    
        <Text style={styles.stat}><Icon name='hourglass-outline' size={24} /> {room?.time} minutes</Text>
@@ -49,7 +49,7 @@ const RoomScreen: React.FC<RoomScreenProps> = (props) => {
        <Text style={styles.stat}><Icon name='people' size={24} /> {room?.groupSize}</Text>
      </View>
      <View style={styles.button}>
-       <Button title='Delete' onPress={() => deleteRoom(room?.id)} />
+       <Button title='Delete Room' color='#e84848' onPress={() => deleteRoom(room?.id)} />
      </View>
    </View>
    </ScrollView>
@@ -86,11 +86,13 @@ const styles = StyleSheet.create({
     fontSize: 30,
     textAlign: 'center',
     backgroundColor: '#4ba358',
+    color: '#fff',
   },
   statTrap: {
     fontSize: 30,
     textAlign: 'center',
-    backgroundColor: 'red',
+    backgroundColor: '#e84848',
+    color: '#fff'
   },
   button: {
     marginTop: 24,

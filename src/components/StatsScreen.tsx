@@ -41,7 +41,7 @@ const StatsScreen: React.FC<StatsScreenProps> = (props) => {
   const currentData = [ { y: escaped }, { y: trapped }];
   const defaultData = [ { y: 0 }, { y: 1 }];
   const currentData2 = [ { y: 1 }, { y: 0 }];
-  const graphicColor = ['green', 'red'];
+  const graphicColor = ['#4ba358', '#e84848'];
   const graphicColor2 = ['#384963', '#b6c4d9'];
 
   const [graphData, setGraphData] = useState(defaultData);

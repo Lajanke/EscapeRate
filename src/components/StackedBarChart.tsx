@@ -43,7 +43,7 @@ const StackedBarChart: React.FC<StackedBarChartProps> = (props) => {
             {dataByYear.map((year, index) => {
                 return <V.VictoryBar
                 key={index} 
-                style={{data: {fill: 'red'}}}
+                style={{data: {fill: '#e84848'}}}
                     animate={{
                     duration: 2000,
                     onLoad: { duration: 1000 }
@@ -54,7 +54,7 @@ const StackedBarChart: React.FC<StackedBarChartProps> = (props) => {
              {dataByYear.map((year, index) => {
                 return <V.VictoryBar 
                     key={index}
-                    style={{data: {fill: 'green'}}}
+                    style={{data: {fill: '#4ba358'}}}
                     animate={{
                     duration: 2000,
                     onLoad: { duration: 1000 }
@@ -74,7 +74,7 @@ const StackedBarChart: React.FC<StackedBarChartProps> = (props) => {
             gutter={20}
             data={[
             { name: 'Escaped', symbol: { fill: 'green', } },
-            { name: 'Trapped', symbol: { fill: 'red' } },
+            { name: 'Trapped', symbol: { fill: '#e84848' } },
             ]}
         />
     </Svg>

@@ -21,7 +21,7 @@ const AddRoomButton: React.FC<AddRoomButtonProps> = (props) => {
           
         </Modal>
         <View style={styles.button}>
-          <Button title={"Add Room"} onPress={() => setModalState(true)} color='#384963'/>
+          <Button title={"Add Room"} onPress={() => setModalState(true)} color='#4ba358'/>
         </View>
       </>
     );

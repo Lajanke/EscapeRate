@@ -68,7 +68,7 @@ const FindEscapeRoom: React.FC<FindEscapeRoomProps> = (props) => {
 
     const getEscapeRooms = async (location) => {
       setShouldFetchData(false)
-      await axios.get(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${location.latitude},${location.longitude}&radius=20000&keyword=escape&&key=AIzaSyBfKa69QF4Y6ghdqsTzsWcLoBTmPvYnBF8`)
+      await axios.get(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${location.latitude},${location.longitude}&radius=25000&keyword=escape&&key=AIzaSyBfKa69QF4Y6ghdqsTzsWcLoBTmPvYnBF8`)
       .then((res) => {
         setEscapeRooms(res.data.results.map(company => {
           return {name: company.name,
@@ -180,7 +180,7 @@ const FindEscapeRoom: React.FC<FindEscapeRoomProps> = (props) => {
         )}
       </Modal>
         <View style={styles.button}>
-          <Button title={"Find Escape Room"} onPress={() => {setModalState(true)}} color='#384963'/>
+          <Button title={"Escape Rooms Near Me"} onPress={() => {setModalState(true)}} color='#384963'/>
         </View>
       </>
     );

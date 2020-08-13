@@ -163,6 +163,7 @@ const AddRoomForm: React.FC<AddRoomFormProps> = (props) => {
                             <View style={styles.imageUploadButton}>
                                 <Button
                                     title='Upload Image'
+                                    color='#384963'
                                     onPress={() => {
                                         const options = {
                                             noData: true
@@ -180,7 +181,7 @@ const AddRoomForm: React.FC<AddRoomFormProps> = (props) => {
                                 <Image source={{uri: formikProps.values.image}} style={{height: 100, resizeMode: 'contain', marginTop: 24}}/>
                             )}
                             <View style={styles.submitButton}>
-                            <Button title='submit' onPress={formikProps.handleSubmit} color='#536e96' />
+                            <Button title='submit' onPress={formikProps.handleSubmit} color='#4ba358' />
                             </View>
                             
                             </View>
@@ -188,7 +189,7 @@ const AddRoomForm: React.FC<AddRoomFormProps> = (props) => {
                     )}
                 </Formik>
                 <View style={styles.closeButton}>
-          <Button title='Close' onPress={() => props.setModalState(false)} color='orange' />
+          <Button title='Close Form' onPress={() => props.setModalState(false)} color='orange' />
           </View>
             </View>
         </ScrollView>
@@ -197,7 +198,12 @@ const AddRoomForm: React.FC<AddRoomFormProps> = (props) => {
 
 const styles = StyleSheet.create({
     formContainer: {
-        margin: 40,
+        marginHorizontal: 24,
+        marginTop: 40,
+        padding: 16,
+        paddingBottom: 24,
+        borderWidth: 1,
+        borderColor: '#bac8de',
     },
     input: {
         paddingTop: 15,
@@ -226,7 +232,7 @@ const styles = StyleSheet.create({
     },
     closeButton: {
         marginHorizontal: 40,
-        marginBottom: 24,
+        marginVertical: 24,
       }
   });
   
