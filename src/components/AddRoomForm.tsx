@@ -46,11 +46,12 @@ const AddRoomForm: React.FC<AddRoomFormProps> = (props) => {
         };
         props.setRoomList([newRoom, ...props.roomList]);
         props.setModalState(false);
+       
         showMessage({
             message: 'New Room Added',
             type: 'success',
             duration: 1000,
-          }) 
+          })
     }
     const [show, setShow] = useState(false);
     const [uploadImage, setImage] = useState(false);

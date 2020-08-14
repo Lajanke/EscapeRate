@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   StyleSheet,
   View,
@@ -6,6 +6,7 @@ import {
   ScrollView,
   SafeAreaView,
   Button,
+  DatePickerIOSComponent,
 } from 'react-native';
 import AddRoomButton from './AddRoomButton';
 import Header from './Header';
@@ -42,6 +43,16 @@ export interface HomeScreenProps {
 type ProfileScreenNavigationProp = StackNavigationProp<StackParamList, 'Home'>;
 
 const HomeScreen: React.FC<HomeScreenProps> = (props) => {
+  const [roomHomeList, setRoomHomeList] = useState(props.rooms)
+
+  const filterRooms = (filter) => {
+    if (filter === 'all') {
+      setRoomHomeList(props.rooms)
+    }
+    else {
+      setRoomHomeList(props.rooms.filter(room => room.escaped === filter))
+    }
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -56,24 +67,31 @@ const HomeScreen: React.FC<HomeScreenProps> = (props) => {
             <View style={styles.statsIconText}>
               <Text style={styles.statsText}>Full Stats </Text><Icon name='chevron-right' size={35} color='#384963' />
             </View>
-          </View>
+          </View>     
         </TouchableHighlight>
-          {props.rooms.map((room) => (
+
+        <View style={styles.filterBar}>
+          <Text style={styles.filterText}>Filter by:</Text>
+          <TouchableHighlight underlayColor='#384963' onPress={() => filterRooms(true)} ><Text style={styles.filterText}>Escaped</Text></TouchableHighlight>
+          <TouchableHighlight underlayColor='#384963' onPress={() => filterRooms(false)}><Text style={styles.filterText} >Locked Up</Text></TouchableHighlight>
+          <TouchableHighlight underlayColor='#384963' onPress={() => filterRooms('all')}><Text style={styles.filterText} >All</Text></TouchableHighlight>
+        </View>
+          {roomHomeList.map((room) => (
             <TouchableHighlight key={room.id} onPress={() =>
               props.navigation.navigate('Room', { id: room.id })} >
               <View style={styles.room}>
                 <Text style={styles.roomText}>
-                  {room.name} 
+                  {room.name}{'\n'}<Text style={styles.dateText}>{new Date(room.date).toDateString()}</Text>
                 </Text>
-                <Text>
-                {room.escaped ? <Icon name='exit-run' color='#4ba358' size={24} /> : <Icon name='door-closed-lock' color='#e84848' size={30} />}
+                <Text style={{marginRight: 16}}>
+                {room.escaped ? <Icon name='exit-run' color='#4ba358' size={24}  /> : <Icon name='door-closed-lock' color='#e84848' size={30} />}
                 </Text>
               </View>
               </TouchableHighlight>
             )
           )} 
       </View> 
-      <AddRoomButton roomList={props.rooms} setRoomList={props.changeRooms} rooms={props.rooms}/>
+      <AddRoomButton roomList={props.rooms} setRoomList={props.changeRooms} rooms={props.rooms} />
       <FindEscapeRoom />
       <Button title='reset' onPress={props.roomsReset}></Button>
       </ScrollView>
@@ -87,7 +105,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   room: {
-    padding: 24,
+    padding: 16,
     backgroundColor: '#edfcfc',
     borderStyle: 'solid',
     borderBottomWidth: 1,
@@ -97,6 +115,12 @@ const styles = StyleSheet.create({
   },
   roomText: {
     fontSize: 24,
+    color: '#384963',
+    marginLeft: 10,
+  },
+  dateText: {
+    fontSize: 12,
+    color: '#000',
   },
   statsBar: {
     padding: 16,
@@ -107,6 +131,19 @@ const styles = StyleSheet.create({
     borderBottomColor: '#c7c7c7',
     flexDirection: 'row',
     justifyContent: 'space-between',
+  },
+  filterBar: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingLeft: 18,
+    paddingRight: 28,
+    borderStyle: 'solid',
+    borderBottomWidth: 1,
+    borderBottomColor: '#c7c7c7',
+  },
+  filterText: {
+    padding: 8,
+    fontSize: 16,
   },
   totalText: {
     fontSize: 16,
