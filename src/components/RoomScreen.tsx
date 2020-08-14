@@ -31,7 +31,7 @@ const RoomScreen: React.FC<RoomScreenProps> = (props) => {
       type: 'danger',
       duration: 1000,
     }) 
-    props.navigation.navigate('Home');  
+    props.navigation.navigate('Home');    
   }
   
   const minutes = room ? Number(room.timeLimit) - Number(room.time) : '';
@@ -42,7 +42,7 @@ const RoomScreen: React.FC<RoomScreenProps> = (props) => {
     <View >
     <RoomHeader company={room?.company ? room?.company : ''} roomName={room?.name ? room?.name : ''} date={room?.date ? new Date(room?.date).toDateString() : 'Date unknown'}/>
     <Text style={room?.escaped ? styles.statEsc : styles.statTrap}>{room?.escaped ? 'Escaped!' : 'Locked Up!'}</Text>
-     <Image source={{uri: room?.image}} style={{height: 200, resizeMode: 'contain', marginTop: 24}}/>
+     <Image source={{uri: (`file:///${room?.image}`)}} style={{height: 200, resizeMode: 'contain', marginTop: 24}}/>
      <View >    
        <Text style={styles.stat}><Icon name='hourglass-outline' size={24} /> {room?.time} minutes</Text>
        <Text style={styles.escapeText}>{minutes >= 0 ? `Escaped with ${minutes} minutes to spare`: `You needed just ${minutes ? Math.abs(minutes): ''} minutes to survive`}</Text>

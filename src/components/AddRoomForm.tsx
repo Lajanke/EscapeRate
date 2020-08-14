@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { StyleSheet, Button, TextInput, View, Text, Image, DatePickerAndroid, DatePickerIOSBase, Platform, SafeAreaView } from 'react-native';
+import { StyleSheet, Button, TextInput, View, Text, Image, DatePickerAndroid, DatePickerIOSBase, Platform, SafeAreaView, } from 'react-native';
 import { CheckBox } from 'react-native-elements';
 import { Formik, Field } from 'formik';
 import { Room } from './HomeScreen';
@@ -170,8 +170,10 @@ const AddRoomForm: React.FC<AddRoomFormProps> = (props) => {
                                             noData: true
                                         };
                                     ImagePicker.launchImageLibrary(options, (response) => {
-                                        if (response.uri) {
-                                            formikProps.values.image = `${response.uri}`
+                                        console.log(response)
+                                        if (response.path) {
+                                            
+                                            formikProps.values.image = `${response.path}`
                                             setImage(true)
                                         }
                                     });
@@ -179,7 +181,7 @@ const AddRoomForm: React.FC<AddRoomFormProps> = (props) => {
                                 >
                             </Button>
                             {uploadImage && (
-                                <Image source={{uri: formikProps.values.image}} style={{height: 100, resizeMode: 'contain', marginTop: 24}}/>
+                                <Image source={{uri: (`file:///${formikProps.values.image}`)}} style={{height: 100, resizeMode: 'contain', marginTop: 24}}/>
                             )}
                             <View style={styles.submitButton}>
                             <Button title='submit' onPress={formikProps.handleSubmit} color='#4ba358' />
