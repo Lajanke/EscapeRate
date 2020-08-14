@@ -40,19 +40,26 @@ export interface HomeScreenProps {
     roomsReset: any;
 }
 
+enum Filter {
+  all,
+  escaped,
+  lockedUp,
+}
+
+const filterRooms = (filter: Filter, rooms: Room[]): Room[] => {
+  switch(filter) {
+    case Filter.all: return rooms;
+    case Filter.escaped: return rooms.filter((room: Room): Boolean => room.escaped);
+    case Filter.lockedUp: return rooms.filter((room: Room): Boolean => !room.escaped);
+  }
+}
+
 type ProfileScreenNavigationProp = StackNavigationProp<StackParamList, 'Home'>;
 
 const HomeScreen: React.FC<HomeScreenProps> = (props) => {
-  const [roomHomeList, setRoomHomeList] = useState(props.rooms)
+  const [filter, setFilter] = useState<Filter>(Filter.all);
 
-  const filterRooms = (filter) => {
-    if (filter === 'all') {
-      setRoomHomeList(props.rooms)
-    }
-    else {
-      setRoomHomeList(props.rooms.filter(room => room.escaped === filter))
-    }
-  }
+  const filteredRooms = filterRooms(filter, props.rooms);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -72,11 +79,11 @@ const HomeScreen: React.FC<HomeScreenProps> = (props) => {
 
         <View style={styles.filterBar}>
           <Text style={styles.filterText}>Filter by:</Text>
-          <TouchableHighlight underlayColor='#384963' onPress={() => filterRooms(true)} ><Text style={styles.filterText}>Escaped</Text></TouchableHighlight>
-          <TouchableHighlight underlayColor='#384963' onPress={() => filterRooms(false)}><Text style={styles.filterText} >Locked Up</Text></TouchableHighlight>
-          <TouchableHighlight underlayColor='#384963' onPress={() => filterRooms('all')}><Text style={styles.filterText} >All</Text></TouchableHighlight>
+          <TouchableHighlight underlayColor='#384963' onPress={() => setFilter(Filter.escaped)} ><Text style={filter === Filter.escaped ? styles.filterHighlight : styles.filterText}>Escaped</Text></TouchableHighlight>
+          <TouchableHighlight underlayColor='#384963' onPress={() => setFilter(Filter.lockedUp)}><Text style={filter === Filter.lockedUp ? styles.filterHighlight : styles.filterText} >Locked Up</Text></TouchableHighlight>
+          <TouchableHighlight underlayColor='#384963' onPress={() => setFilter(Filter.all)}><Text style={filter === Filter.all ? styles.filterHighlight : styles.filterText} >All</Text></TouchableHighlight>
         </View>
-          {roomHomeList.map((room) => (
+          {filteredRooms.map((room) => (
             <TouchableHighlight key={room.id} onPress={() =>
               props.navigation.navigate('Room', { id: room.id })} >
               <View style={styles.room}>
@@ -142,6 +149,11 @@ const styles = StyleSheet.create({
     borderBottomColor: '#c7c7c7',
   },
   filterText: {
+    padding: 8,
+    fontSize: 16,
+  },
+  filterHighlight: {
+    textDecorationLine: 'underline',
     padding: 8,
     fontSize: 16,
   },
