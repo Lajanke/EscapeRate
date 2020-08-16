@@ -1,14 +1,14 @@
 import React, {useState} from 'react';
-import { StyleSheet, Button, TextInput, View, Text, Image, DatePickerAndroid, DatePickerIOSBase, Platform, SafeAreaView, } from 'react-native';
+import { StyleSheet, Button, TextInput, View, Text, Image, SafeAreaView, } from 'react-native';
 import { CheckBox } from 'react-native-elements';
-import { Formik, Field } from 'formik';
+import { Formik } from 'formik';
 import { Room } from './HomeScreen';
 import { showMessage } from "react-native-flash-message";
 import * as yup from 'yup';
 import ImagePicker from 'react-native-image-picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { TouchableOpacity, TouchableHighlight, ScrollView } from 'react-native-gesture-handler';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const newRoomSchema = yup.object({
     name: yup.string().required('Required'),
@@ -42,7 +42,7 @@ const AddRoomForm: React.FC<AddRoomFormProps> = (props) => {
             time: values.time,
             timeLimit: values.timeLimit,
             company: values.company,
-            image: values.image ? values.image : 'https://thumbs.dreamstime.com/b/combination-lock-quest-escape-room-vintage-to-be-opened-solved-126538995.jpg',
+            image: values.image ? values.image : '',
         };
         props.setRoomList([newRoom, ...props.roomList]);
         props.setModalState(false);
@@ -161,6 +161,7 @@ const AddRoomForm: React.FC<AddRoomFormProps> = (props) => {
                             value={formikProps.values.company}
                             style={styles.input}
                             />
+
                             <View style={styles.imageUploadButton}>
                                 <Button
                                     title='Upload Image'
@@ -170,9 +171,7 @@ const AddRoomForm: React.FC<AddRoomFormProps> = (props) => {
                                             noData: true
                                         };
                                     ImagePicker.launchImageLibrary(options, (response) => {
-                                        console.log(response)
-                                        if (response.path) {
-                                            
+                                        if (response.path) {     
                                             formikProps.values.image = `${response.path}`
                                             setImage(true)
                                         }
