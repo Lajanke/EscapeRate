@@ -42,7 +42,13 @@ const RoomScreen: React.FC<RoomScreenProps> = (props) => {
     <View >
     <RoomHeader company={room?.company ? room?.company : ''} roomName={room?.name ? room?.name : ''} date={room?.date ? new Date(room?.date).toDateString() : 'Date unknown'}/>
     <Text style={room?.escaped ? styles.statEsc : styles.statTrap}>{room?.escaped ? 'Escaped!' : 'Locked Up!'}</Text>
-     <Image source={{uri: (`file:///${room?.image}`)}} style={{height: 200, resizeMode: 'contain', marginTop: 24}}/>
+     <Image source={room?.image ? 
+      {uri: (`file:///${room?.image}`)} 
+      : room?.escaped ? require('../images/escaped.jpg') 
+      : {uri: ('https://thumbs.dreamstime.com/b/combination-lock-quest-escape-room-vintage-to-be-opened-solved-126538995.jpg')}} 
+      style={(room?.image || (!room?.image && !room?.escaped)) 
+      ? {height: 200, resizeMode: 'contain', marginTop: 24} 
+      : {height: 200, resizeMode: 'contain', marginTop: 24, alignSelf: 'center'} }/>
      <View >    
        <Text style={styles.stat}><Icon name='hourglass-outline' size={24} /> {room?.time} minutes</Text>
        <Text style={styles.escapeText}>{minutes >= 0 ? `Escaped with ${minutes} minutes to spare`: `You needed just ${minutes ? Math.abs(minutes): ''} minutes to survive`}</Text>
