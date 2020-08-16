@@ -16,7 +16,7 @@ import { TouchableHighlight } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { connect } from 'react-redux';
-import { changeRooms, roomsReset } from '../store/rooms/roomActions';
+import { changeRooms } from '../store/rooms/roomActions';
 import FindEscapeRoom from './FindEscapeRoom';
 
 declare const global: {HermesInternal: null | {}};
@@ -37,7 +37,6 @@ export interface HomeScreenProps {
     navigation: ProfileScreenNavigationProp;
     rooms: Room[];
     changeRooms: any;
-    roomsReset: any;
 }
 
 enum Filter {
@@ -100,7 +99,6 @@ const HomeScreen: React.FC<HomeScreenProps> = (props) => {
       </View> 
       <AddRoomButton roomList={props.rooms} setRoomList={props.changeRooms} rooms={props.rooms} />
       <FindEscapeRoom />
-      <Button title='reset' onPress={props.roomsReset}></Button>
       </ScrollView>
     </SafeAreaView>
   );
@@ -188,7 +186,6 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   changeRooms: (rooms) => dispatch(changeRooms(rooms)),
-  roomsReset: () => dispatch(roomsReset()) 
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen)
