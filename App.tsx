@@ -23,7 +23,7 @@ const App: React.FC = () => {
         screenOptions={{
           headerStyle: {
             backgroundColor: '#384963',
-            height: 35,          
+            height: 40,          
           },
           headerTitleStyle: {
             color: '#fff',
@@ -40,12 +40,12 @@ const App: React.FC = () => {
         <Stack.Screen 
           name="Room" 
           component={RoomScreen}
-          options={{title: 'Escape Rate'}}
+          options={{title: '', headerRight: () => <Image style={{width: 30, height: 30, marginRight: 10}} source={require('./src/images/escapeRateLogo.png')}></Image>}}
         />
         <Stack.Screen 
           name="Stats"
           component={StatsScreen}
-          options={{title: 'Escape Rate'}}
+          options={{title: '', headerRight: () => <Image style={{width: 30, height: 30, marginRight: 10}} source={require('./src/images/escapeRateLogo.png')}></Image>}}
         />
       </Stack.Navigator>
     </NavigationContainer>
