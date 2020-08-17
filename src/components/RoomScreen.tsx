@@ -101,9 +101,10 @@ const styles = StyleSheet.create({
     color: '#fff'
   },
   button: {
-    marginTop: 24,
-    marginBottom: 24,
+    marginVertical: 24,
     paddingHorizontal: 20,
+    width: 150,
+    alignSelf: 'center',
   }
 });
 

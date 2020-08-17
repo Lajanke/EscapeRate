@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
   },
   room: {
     padding: 16,
-    backgroundColor: '#edfcfc',
+    backgroundColor: '#fff',
     borderStyle: 'solid',
     borderBottomWidth: 1,
     borderBottomColor: '#bac8de',
@@ -149,6 +149,7 @@ const styles = StyleSheet.create({
     borderStyle: 'solid',
     borderBottomWidth: 1,
     borderBottomColor: '#c7c7c7',
+    backgroundColor: '#fafcff'
   },
   filterText: {
     padding: 8,
