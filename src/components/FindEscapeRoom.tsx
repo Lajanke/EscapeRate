@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, } from 'react';
 import { Button, Image, StyleSheet, View, Modal, Text, PermissionsAndroid } from 'react-native';
 import MapView, { Marker, Callout } from 'react-native-maps';
 import Geolocation from 'react-native-geolocation-service';
@@ -28,7 +28,8 @@ const FindEscapeRoom: React.FC<FindEscapeRoomProps> = (props) => {
     const [escapeRooms, setEscapeRooms] = useState<any>([]);
     const [info, setInfoOpen] = useState<Boolean>(false);
     const [companyInfo, setMarkerInfo] = useState<any>({});
-    const [shouldFetchData, setShouldFetchData] = useState<Boolean>(false)
+    const [shouldFetchData, setShouldFetchData] = useState<Boolean>(false);
+    const [selectedPin, setPin] = useState<number>(-1);
 
     useEffect(() => {
       getLocation();
@@ -41,7 +42,6 @@ const FindEscapeRoom: React.FC<FindEscapeRoomProps> = (props) => {
     }, [shouldFetchData]);
 
     const setCurrentLocation = () => {
-      console.log('fetching location');
       Geolocation.getCurrentPosition(
         position => {
           setLocation({
@@ -68,7 +68,7 @@ const FindEscapeRoom: React.FC<FindEscapeRoomProps> = (props) => {
 
     const getEscapeRooms = async (location) => {
       setShouldFetchData(false)
-      await axios.get(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${location.latitude},${location.longitude}&radius=25000&keyword=escape&&key=AIzaSyBfKa69QF4Y6ghdqsTzsWcLoBTmPvYnBF8`)
+      await axios.get(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${location.latitude},${location.longitude}&radius=25000&keyword=escape&room&key=AIzaSyBfKa69QF4Y6ghdqsTzsWcLoBTmPvYnBF8`)
       .then((res) => {
         setEscapeRooms(res.data.results.map(company => {
           return {name: company.name,
@@ -86,7 +86,6 @@ const FindEscapeRoom: React.FC<FindEscapeRoomProps> = (props) => {
     }
 
     const getLocation = async () => {
-      console.log('in get location')
       try {
         const granted = await PermissionsAndroid.request(
           PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
@@ -111,7 +110,6 @@ const FindEscapeRoom: React.FC<FindEscapeRoomProps> = (props) => {
     const getCompanyDetails = (company) => {
       axios.get(`https://maps.googleapis.com/maps/api/place/details/json?place_id=${company.place_id}&key=AIzaSyBfKa69QF4Y6ghdqsTzsWcLoBTmPvYnBF8`)
           .then((res) => {
-            console.log(res)
             updateCompany({...company, website: res.data.result.website})
           })
           .catch((err) => {
@@ -130,32 +128,31 @@ const FindEscapeRoom: React.FC<FindEscapeRoomProps> = (props) => {
       setMarkerInfo(company)
     }
 
-    console.log('RENDERING', escapeRooms)
-
     return (
       <>
-      <Modal visible={modalOpen} animationType={'slide'}>   
+      <Modal visible={modalOpen} animationType={'slide'}> 
+
         <MapView
         moveOnMarkerPress
         showsUserLocation
+        followsUserLocation={true}
         zoomControlEnabled={true}
         zoomEnabled={true}
         style={styles.map}
         region={{
           latitude: location.latitude,
           longitude: location.longitude,
-          latitudeDelta: 0.03,
-          longitudeDelta: 0.03,
+          latitudeDelta: 0.05,
+          longitudeDelta: 0.05,
         }}
         onPress={() => setInfoOpen(false)}
         >
           {escapeRooms.map((company, index) => {
             return (<Marker
               coordinate={{latitude: company.coordinates.latitude, longitude: company.coordinates.longitude}}
-              title={company.name}
               key={`${index}_${Date.now()}`}
-              pinColor={'#384963'}
               onPress={() => {
+                setPin(index)
                 getCompanyDetails(company)
                 setLocation({
                   latitude: company.coordinates.latitude,
@@ -164,24 +161,35 @@ const FindEscapeRoom: React.FC<FindEscapeRoomProps> = (props) => {
                     latitude: company.coordinates.latitude,
                     longitude: company.coordinates.longitude,
                   }) 
-                })
+                })              
               }}>
               <View>
-                <Icon name='key' size={40} color='#384963'></Icon> 
+                <Icon name='key' size={40} color={index === selectedPin ? '#4ba358' : '#384963'}></Icon> 
               </View>
             </Marker>
           );})}
         </MapView>
+
         <View style={styles.closeButton}>
             <Button title='Close Map' onPress={() => setModalState(false)} color='orange' />
         </View>
+
+        {escapeRooms.length === 0 &&
+        <View style={styles.noRoomsContainer}>
+          <Text style={styles.noRoomsText}>No escape rooms within 25km</Text>
+        </View>
+        }
+
         {info && (
           <MarkerInfo company={companyInfo}/>
         )}
+
       </Modal>
+
         <View style={styles.button}>
           <Button title={"Escape Rooms Near Me"} onPress={() => {setModalState(true)}} color='#384963'/>
         </View>
+        
       </>
     );
 };
@@ -198,6 +206,20 @@ const styles = StyleSheet.create({
   },
   map: {
     ...StyleSheet.absoluteFillObject,
+  },
+  noRoomsContainer: {
+    backgroundColor: '#fff',
+    position: 'absolute',
+    bottom: 24,
+    alignSelf: 'center',
+    padding: 10,
+    borderRadius: 5,
+    borderColor: '#384963',
+    borderWidth: 1,
+  },
+  noRoomsText: {
+    fontSize: 20,
+    color: '#e84848',
   },
 });
 
