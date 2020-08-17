@@ -22,7 +22,7 @@ const MarkerInfo: React.FC<MarkerInfoProps> = (props) => {
  
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#edfcfc',
+        backgroundColor: '#fff',
         width: 300,
         height: 110,
         position: "absolute",
