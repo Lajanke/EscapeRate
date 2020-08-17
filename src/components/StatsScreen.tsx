@@ -18,7 +18,7 @@ import { Svg } from 'react-native-svg';
 import StackedBarChart from './StackedBarChart';
 
 import { connect } from 'react-redux';
-import { changeRooms, roomsReset } from '../store/rooms/roomActions';
+import { changeRooms } from '../store/rooms/roomActions';
 
 declare const global: {HermesInternal: null | {}};
 

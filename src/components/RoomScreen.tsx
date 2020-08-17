@@ -60,9 +60,7 @@ const RoomScreen: React.FC<RoomScreenProps> = (props) => {
    </View>
    </ScrollView>
    </SafeAreaView>
-  )  
-  
-     
+  )    
 };
 
 const styles = StyleSheet.create({

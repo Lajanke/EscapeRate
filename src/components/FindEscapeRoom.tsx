@@ -1,23 +1,21 @@
 import React, { useState, useEffect, useRef, } from 'react';
-import { Button, Image, StyleSheet, View, Modal, Text, PermissionsAndroid } from 'react-native';
-import MapView, { Marker, Callout } from 'react-native-maps';
+import { Button, StyleSheet, View, Modal, Text, PermissionsAndroid } from 'react-native';
+import MapView, { Marker } from 'react-native-maps';
 import Geolocation from 'react-native-geolocation-service';
 import axios from 'axios';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MarkerInfo from './MarkerInfo';
 
-export interface FindEscapeRoomProps {
-}
-
 const usePrevious = (value) => {
   const ref = useRef();
+  
   useEffect(() => {
     ref.current = value;
   });
   return ref.current;
 }
 
-const FindEscapeRoom: React.FC<FindEscapeRoomProps> = (props) => { 
+const FindEscapeRoom: React.FC = (props) => { 
     const [modalOpen, setModalState] = useState<boolean>(false)
     const [location, setLocation] = useState<any>({
       latitude: 0,

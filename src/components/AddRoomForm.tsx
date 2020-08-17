@@ -29,8 +29,9 @@ export interface AddRoomFormProps {
     setModalState: any;
 }
 
-const AddRoomForm: React.FC<AddRoomFormProps> = (props) => {
-    
+const AddRoomForm: React.FC<AddRoomFormProps> = (props) => {  
+    const [show, setShow] = useState(false);
+    const [uploadImage, setImage] = useState(false); 
     const addRoom = (values) => {
         const maxId: number = props.roomList.reduce((max: number, room: Room) => room.id > max ? room.id : max, 0);
         const newRoom: Room = {
@@ -53,8 +54,6 @@ const AddRoomForm: React.FC<AddRoomFormProps> = (props) => {
             duration: 1000,
           })
     }
-    const [show, setShow] = useState(false);
-    const [uploadImage, setImage] = useState(false);
 
     return <SafeAreaView>
         <ScrollView>

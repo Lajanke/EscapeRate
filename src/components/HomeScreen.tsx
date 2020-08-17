@@ -1,12 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   StyleSheet,
   View,
   Text,
   ScrollView,
   SafeAreaView,
-  Button,
-  DatePickerIOSComponent,
 } from 'react-native';
 import AddRoomButton from './AddRoomButton';
 import Header from './Header';
@@ -14,12 +12,9 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { StackParamList } from '../../App'
 import { TouchableHighlight } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-
 import { connect } from 'react-redux';
 import { changeRooms } from '../store/rooms/roomActions';
 import FindEscapeRoom from './FindEscapeRoom';
-
-declare const global: {HermesInternal: null | {}};
 
 export interface Room {
   id: number;
