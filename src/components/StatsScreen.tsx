@@ -52,6 +52,12 @@ const StatsScreen: React.FC<StatsScreenProps> = (props) => {
     setGraph2Data(currentData2)
   }, []);
 
+  if (props.rooms.length === 0) {
+    return <View>
+      <Text style={styles.noDataText}>No data to display.{'\n'}Add room to see stats here.</Text>
+    </View>
+  }
+
   return (
     <SafeAreaView > 
       <ScrollView>
@@ -123,6 +129,12 @@ const styles = StyleSheet.create({
     borderStyle: 'solid',
     borderBottomWidth: 1,
     borderBottomColor: '#c7c7c7'
+  },
+  noDataText: {
+    textAlign: 'center',
+    padding: 24,
+    fontSize: 24,
+    color: '#e84848',
   }
 });
 

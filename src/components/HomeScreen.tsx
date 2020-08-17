@@ -57,7 +57,6 @@ type ProfileScreenNavigationProp = StackNavigationProp<StackParamList, 'Home'>;
 
 const HomeScreen: React.FC<HomeScreenProps> = (props) => {
   const [filter, setFilter] = useState<Filter>(Filter.all);
-
   const filteredRooms = filterRooms(filter, props.rooms);
 
   return (
@@ -97,6 +96,11 @@ const HomeScreen: React.FC<HomeScreenProps> = (props) => {
             )
           )} 
       </View> 
+      {props.rooms.length === 0 &&
+      <View>
+        <Text style={styles.noDataText}>Add New Room to get started.</Text>
+      </View>
+      }
       <AddRoomButton roomList={props.rooms} setRoomList={props.changeRooms} rooms={props.rooms} />
       <FindEscapeRoom />
       </ScrollView>
@@ -178,6 +182,12 @@ const styles = StyleSheet.create({
     borderRadius: 3,
     backgroundColor: '#a1adbf'
   },
+  noDataText: {
+    alignSelf: 'center',
+    padding: 24,
+    fontSize: 24,
+    color: '#e84848',
+  }
 });
 
 const mapStateToProps = state => ({
