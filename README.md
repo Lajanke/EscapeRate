@@ -6,7 +6,7 @@ This app is built with react-native and incorporates some Typescript. It has no 
 
 ## Screenshots
 
-![image](readmeImages\readmeImage.png)
+![image](.\readmeImages\readmeImage.png)
 
 ## Built with:
 
