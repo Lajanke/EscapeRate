@@ -8,6 +8,10 @@ This app is built with react-native and incorporates some Typescript. It has no 
 
 ![image](./readmeImages/readmeImage.png)
 
+<video width="200" controls>
+    <source src="./readmeImages/Escape_rate_demo.mp4" type="video/mp4">
+</video>
+
 ## Built with:
 
 - **Node.js (v13.7.0)**
