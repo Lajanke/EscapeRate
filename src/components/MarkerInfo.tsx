@@ -1,8 +1,9 @@
 import React from 'react';
 import { View, Text, StyleSheet, Linking } from 'react-native';
+import { Company } from './FindEscapeRoom';
 
 export interface MarkerInfoProps {
-    company: any
+    company: Company,
 }
 
 const MarkerInfo: React.FC<MarkerInfoProps> = (props) => {
@@ -15,8 +16,7 @@ const MarkerInfo: React.FC<MarkerInfoProps> = (props) => {
         {!props.company.website && (
           <Text style={styles.website}>No Website Info</Text>
         )}
-    </View>
-    
+    </View> 
   );
 };
  

@@ -5,47 +5,43 @@ import {
   Text,
   ScrollView,
   SafeAreaView,
-  Button,
-  RecyclerViewBackedScrollViewComponent,
 } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { StackParamList } from '../../App'
-import { TouchableHighlight } from 'react-native-gesture-handler';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Room } from './HomeScreen';
 import * as V from 'victory-native';
 import { Svg } from 'react-native-svg';
 import StackedBarChart from './StackedBarChart';
-
 import { connect } from 'react-redux';
-import { changeRooms } from '../store/rooms/roomActions';
-
-declare const global: {HermesInternal: null | {}};
 
 export interface StatsScreenProps {
     navigation: ProfileScreenNavigationProp;
     rooms: Room[];
-    changeRooms: any;
+    changeRooms: Function;
+}
+
+interface Ydata {
+  y: number,
 }
 
 type ProfileScreenNavigationProp = StackNavigationProp<StackParamList, 'Stats'>;
 
 const StatsScreen: React.FC<StatsScreenProps> = (props) => {
-  const percent = Math.floor((props.rooms.filter(room => room.escaped === true).length / props.rooms.length) * 100);
-  const totalTime = props.rooms.reduce((acc, val) => acc + Number(val.time), 0)
-  const escaped = props.rooms.filter(room => room.escaped).length
-  const trapped = props.rooms.filter(room => !room.escaped).length
-  const timeArray = props.rooms.map(room =>  Number(room.timeLimit) - Number(room.time))
-  const meanPercent = timeArray.reduce((acc, val) => Number(acc) + Number(val), 0) / props.rooms.length
+  const percent: number = Math.floor((props.rooms.filter((room: Room) => room.escaped === true).length / props.rooms.length) * 100);
+  const totalTime: number = props.rooms.reduce((acc, val) => acc + Number(val.time), 0)
+  const escaped: number = props.rooms.filter((room: Room) => room.escaped).length
+  const trapped: number = props.rooms.filter((room: Room) => !room.escaped).length
+  const timeArray: number[] = props.rooms.map((room: Room) => Number(room.timeLimit) - Number(room.time))
+  const meanPercent: number = timeArray.reduce((acc: number, val: number) => Number(acc) + Number(val), 0) / props.rooms.length
 
-  const currentData = [ { y: escaped }, { y: trapped }];
-  const defaultData = [ { y: 0 }, { y: 1 }];
-  const currentData2 = [ { y: 1 }, { y: 0 }];
-  const graphicColor = ['#4ba358', '#e84848'];
-  const graphicColor2 = ['#384963', '#b6c4d9'];
+  const currentData: Ydata[] = [ { y: escaped }, { y: trapped }];
+  const defaultData: Ydata[] = [ { y: 0 }, { y: 1 }];
+  const currentData2: Ydata[] = [ { y: 1 }, { y: 0 }];
+  const graphicColor: string[] = ['#4ba358', '#e84848'];
+  const graphicColor2: string[] = ['#384963', '#b6c4d9'];
 
-  const [graphData, setGraphData] = useState(defaultData);
-  const [graph2Data, setGraph2Data] = useState(defaultData);
+  const [graphData, setGraphData] = useState<Ydata[]>(defaultData);
+  const [graph2Data, setGraph2Data] = useState<Ydata[]>(defaultData);
 
   useEffect(() => {
     setGraphData(currentData);
@@ -62,7 +58,7 @@ const StatsScreen: React.FC<StatsScreenProps> = (props) => {
     <SafeAreaView > 
       <ScrollView>
       <Text style={styles.headerText}>Stats{'\n'}{props.rooms.length} Escape Attepmts</Text>
-    <View style={styles.pieCharts}>
+      <View style={styles.pieCharts}>
       <Svg height={200} width={200}>
       <V.VictoryPie data={graphData}
       width={200} height={200} 

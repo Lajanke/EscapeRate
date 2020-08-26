@@ -26,7 +26,7 @@ const newRoomSchema = yup.object({
 export interface AddRoomFormProps {
     setRoomList: React.Dispatch<React.SetStateAction<Room[]>>; 
     roomList: Room[];
-    setModalState: any;
+    setModalState: Function;
 }
 
 const AddRoomForm: React.FC<AddRoomFormProps> = (props) => {  

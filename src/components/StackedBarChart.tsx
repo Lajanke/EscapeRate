@@ -10,25 +10,25 @@ import { connect } from 'react-redux';
 
 export interface StackedBarChartProps {
     rooms: Room[];
-    changeRooms: any;
+    changeRooms: Function;
 }
 
 const StackedBarChart: React.FC<StackedBarChartProps> = (props) => {
-  const yearArray = props.rooms.map(room => new Date(room.date).getFullYear())
-  const maxYear = Math.max(...yearArray)
-  const minYear = Math.min(...yearArray)
-  const years: number[] = []
+  const yearArray: number[] = props.rooms.map((room: Room) => new Date(room.date).getFullYear());
+  const maxYear: number = Math.max(...yearArray);
+  const minYear: number = Math.min(...yearArray);
+  const years: number[] = [];
 
-  let i = minYear
+  let i: number = minYear;
 
   while (i <= maxYear) {
-    years.push(i)
-    i++
-  }
+    years.push(i);
+    i++;
+  };
 
-  const dataByYear = years.map(y => {
+  const dataByYear = years.map((y: number) => {
       return {  year: y,
-                data: props.rooms.filter(room => new Date(room.date).getFullYear() === y)}
+                data: props.rooms.filter((room: Room) => new Date(room.date).getFullYear() === y)}
   })
 
   return (

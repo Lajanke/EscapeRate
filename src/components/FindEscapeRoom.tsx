@@ -6,24 +6,30 @@ import axios from 'axios';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MarkerInfo from './MarkerInfo';
 
-const usePrevious = (value) => {
-  const ref = useRef();
-  
-  useEffect(() => {
-    ref.current = value;
-  });
-  return ref.current;
+export interface Location {
+  latitude: number,
+  longitude: number,
+  coordinates: any[],
+}
+
+export interface Company {
+  name: string,
+    place_id: string,
+    website: string,
+    coordinates: {
+      latitude: number,
+      longitude: number
+    }
 }
 
 const FindEscapeRoom: React.FC = (props) => { 
     const [modalOpen, setModalState] = useState<boolean>(false)
-    const [location, setLocation] = useState<any>({
+    const [location, setLocation] = useState<Location>({
       latitude: 0,
       longitude: 0,
       coordinates: [],
     });
-    const prevLocation: any = usePrevious(location) || location;
-    const [escapeRooms, setEscapeRooms] = useState<any>([]);
+    const [escapeRooms, setEscapeRooms] = useState<Company[]>([]);
     const [info, setInfoOpen] = useState<Boolean>(false);
     const [companyInfo, setMarkerInfo] = useState<any>({});
     const [shouldFetchData, setShouldFetchData] = useState<Boolean>(false);
@@ -183,11 +189,9 @@ const FindEscapeRoom: React.FC = (props) => {
         )}
 
       </Modal>
-
         <View style={styles.button}>
           <Button title={"Escape Rooms Near Me"} onPress={() => {setModalState(true)}} color='#384963'/>
-        </View>
-        
+        </View>       
       </>
     );
 };
